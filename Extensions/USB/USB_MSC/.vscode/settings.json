@@ -1,0 +1,8 @@
+{
+  "C_Cpp.errorSquiggles": "disabled",
+  "files.associations": {
+    "spi.h": "c",
+    "main.h": "c",
+    "sd_card.h": "c"
+  }
+}
