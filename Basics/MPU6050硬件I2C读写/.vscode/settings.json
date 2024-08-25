@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "key.h": "c",
+    "systick.h": "c",
+    "mpu6050.h": "c"
+  }
+}
