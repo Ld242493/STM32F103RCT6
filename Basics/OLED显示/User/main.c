@@ -21,7 +21,7 @@ int main(void)
   Timer6_Init();
   OLED_Init();
   OLED_ShowString(10, 0, "OLED Show demo", OLED_8X16);
-  OLED_ShowChinese(0, 20, "ÄãºÃ£¬ÊÀ½ç¡£");
+  OLED_ShowChinese(0, 20, "ä½ å¥½ï¼Œä¸–ç•Œã€‚");
   OLED_Update();  
   while(1)
   {

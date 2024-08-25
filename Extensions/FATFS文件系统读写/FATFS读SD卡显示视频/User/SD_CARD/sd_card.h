@@ -24,34 +24,34 @@
 
 /* SD Card Config -------------------------------------------------------------*/
 
-/* SD¿¨ SPI ²Ù×÷º¯Êı ºê¶¨Òå
- * ´ó¼ÒÒÆÖ²µÄÊ±ºò, ¸ù¾İĞèÒªÊµÏÖ: spi1_read_write_byte ºÍ spi1_set_speed
- * ÕâÁ½¸öº¯Êı¼´¿É, SD¿¨ SPIÄ£Ê½, »áÍ¨¹ıÕâÁ½¸öº¯Êı, ÊµÏÖ¶ÔSD¿¨µÄ²Ù×÷.
+/* SDå¡ SPI æ“ä½œå‡½æ•° å®å®šä¹‰
+ * å¤§å®¶ç§»æ¤çš„æ—¶å€™, æ ¹æ®éœ€è¦å®ç°: spi1_read_write_byte å’Œ spi1_set_speed
+ * è¿™ä¸¤ä¸ªå‡½æ•°å³å¯, SDå¡ SPIæ¨¡å¼, ä¼šé€šè¿‡è¿™ä¸¤ä¸ªå‡½æ•°, å®ç°å¯¹SDå¡çš„æ“ä½œ.
  */
 
 uint8_t SPI_ReadWrite(uint8_t byte);
 void SPI_SetSpeed(uint8_t BaudRatePrescaler);
 
-#define sd_spi_read_write_byte(x)     SPI_ReadWrite(x)             /* SD¿¨ SPI¶ÁĞ´º¯Êı */
-#define sd_spi_speed_low()            SPI_SetSpeed(SPI_BaudRatePrescaler_256)       /* SD¿¨ SPIµÍËÙÄ£Ê½ */
-#define sd_spi_speed_high()           SPI_SetSpeed(SPI_BaudRatePrescaler_2)         /* SD¿¨ SPI¸ßËÙÄ£Ê½ */
+#define sd_spi_read_write_byte(x)     SPI_ReadWrite(x)             /* SDå¡ SPIè¯»å†™å‡½æ•° */
+#define sd_spi_speed_low()            SPI_SetSpeed(SPI_BaudRatePrescaler_256)       /* SDå¡ SPIä½é€Ÿæ¨¡å¼ */
+#define sd_spi_speed_high()           SPI_SetSpeed(SPI_BaudRatePrescaler_2)         /* SDå¡ SPIé«˜é€Ÿæ¨¡å¼ */
 
 
-/* SD¿¨ Æ¬Ñ¡ Òı½Å ¶¨Òå */
+/* SDå¡ ç‰‡é€‰ å¼•è„š å®šä¹‰ */
 #define SD_CS(x)   SPI_CS_Write(x)
 
-/* SD¿¨ ·µ»ØÖµ¶¨Òå */
+/* SDå¡ è¿”å›å€¼å®šä¹‰ */
 #define SD_OK           0
 #define SD_ERROR        1
 
-/* SD¿¨ ÀàĞÍ¶¨Òå */
+/* SDå¡ ç±»å‹å®šä¹‰ */
 #define SD_TYPE_ERR     0X00
 #define SD_TYPE_MMC     0X01
 #define SD_TYPE_V1      0X02
 #define SD_TYPE_V2      0X04
 #define SD_TYPE_V2HC    0X06
 
-/* SD¿¨ ÃüÁî¶¨Òå */
+/* SDå¡ å‘½ä»¤å®šä¹‰ */
 #define CMD0    (0)             /* GO_IDLE_STATE */
 #define CMD1    (1)             /* SEND_OP_COND (MMC) */
 #define ACMD41  (0x80 + 41)     /* SEND_OP_COND (SDC) */
@@ -73,16 +73,16 @@ void SPI_SetSpeed(uint8_t BaudRatePrescaler);
 #define CMD55   (55)            /* APP_CMD */
 #define CMD58   (58)            /* READ_OCR */
 
-/* SD¿¨µÄÀàĞÍ */
+/* SDå¡çš„ç±»å‹ */
 extern uint8_t  sd_type;
 
-uint8_t sd_init(void);                                              /* SD¿¨³õÊ¼»¯ */
-uint32_t sd_get_sector_count(void);                                 /* »ñÈ¡SD¿¨µÄ×ÜÉÈÇøÊı(ÉÈÇøÊı) */
-uint8_t sd_get_status(void);                                        /* »ñÈ¡SD¿¨×´Ì¬ */
-uint8_t sd_get_cid(uint8_t *cid_data);                              /* »ñÈ¡SD¿¨µÄCIDĞÅÏ¢ */
-uint8_t sd_get_csd(uint8_t *csd_data);                              /* »ñÈ¡SD¿¨µÄCSDĞÅÏ¢ */
+uint8_t sd_init(void);                                              /* SDå¡åˆå§‹åŒ– */
+uint32_t sd_get_sector_count(void);                                 /* è·å–SDå¡çš„æ€»æ‰‡åŒºæ•°(æ‰‡åŒºæ•°) */
+uint8_t sd_get_status(void);                                        /* è·å–SDå¡çŠ¶æ€ */
+uint8_t sd_get_cid(uint8_t *cid_data);                              /* è·å–SDå¡çš„CIDä¿¡æ¯ */
+uint8_t sd_get_csd(uint8_t *csd_data);                              /* è·å–SDå¡çš„CSDä¿¡æ¯ */
 
-uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt);  /* ¶ÁSD¿¨(fatfs/usbµ÷ÓÃ) */
-uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt); /* Ğ´SD¿¨(fatfs/usbµ÷ÓÃ) */
+uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt);  /* è¯»SDå¡(fatfs/usbè°ƒç”¨) */
+uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt); /* å†™SDå¡(fatfs/usbè°ƒç”¨) */
 
 #endif

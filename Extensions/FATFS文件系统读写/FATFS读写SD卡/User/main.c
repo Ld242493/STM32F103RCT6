@@ -28,17 +28,17 @@ uint8_t ReadBuffer[20];
 void FatFs_WriteTest(void)
 {
   res = f_mount(&fs, "0:", 1);
-  if(res == FR_NO_FILESYSTEM)   //Ã»ÓÐÎÄ¼þÏµÍ³£¬¸ñÊ½»¯
+  if(res == FR_NO_FILESYSTEM)   //æ²¡æœ‰æ–‡ä»¶ç³»ç»Ÿï¼Œæ ¼å¼åŒ–
   {
     res = f_mkfs("0:", 1, 0);
     if(FR_OK == res)
     {
-      f_mount(NULL, "0:", 1);   //È¡Ïû¹ÒÔØ
-      f_mount(&fs, "0:", 1);    //ÖØÐÂ¹ÒÔØ
+      f_mount(NULL, "0:", 1);   //å–æ¶ˆæŒ‚è½½
+      f_mount(&fs, "0:", 1);    //é‡æ–°æŒ‚è½½
     }
     else  led_ctrl(led_on);
   }
-  /*  Ð´Êý¾Ý  */
+  /*  å†™æ•°æ®  */
   if(FR_OK == f_open(&fnew, "0:FatFs.txt", FA_OPEN_ALWAYS | FA_WRITE))
   {
     f_write(&fnew, WriteBuffer, 20, &fnum);
@@ -47,14 +47,14 @@ void FatFs_WriteTest(void)
     f_close(&fnew);
   }
   else  led_ctrl(led_on);
-    /*  È¡Ïû¹ÒÔØ  */
+    /*  å–æ¶ˆæŒ‚è½½  */
   f_mount(NULL, "0:", 1);
 }
 
 void FatFs_ReadTest(void)
 {
   res = f_mount(&fs, "0:", 1);
-  /*  ¶ÁÊý¾Ý  */
+  /*  è¯»æ•°æ®  */
   if(FR_OK == f_open(&fnew, "0:FatFs.txt", FA_OPEN_EXISTING | FA_READ))
   {
     f_read(&fnew, ReadBuffer, 20, &fnum);
@@ -68,33 +68,33 @@ void FatFs_ReadTest(void)
 }
 
 /**
- * @brief »ñÈ¡SD_CardÄÚ´æ
+ * @brief èŽ·å–SD_Cardå†…å­˜
  * 
- * @param path ´ÅÅÌ±àºÅ
- * @param total ×ÜÄÚ´æ
- * @param free Ê£ÓàÄÚ´æ
+ * @param path ç£ç›˜ç¼–å·
+ * @param total æ€»å†…å­˜
+ * @param free å‰©ä½™å†…å­˜
  * @return uint8_t 
  */
 uint8_t Fatfs_GetStorage(FATFS *fs, uint8_t *path, uint32_t *total, uint32_t *free)
 {
   FRESULT res;
-  /*  ¿ÕÏÐ´Ø£¬¿ÕÏÐÉÈÇø£¬×ÜÉÈÇø  */
+  /*  ç©ºé—²ç°‡ï¼Œç©ºé—²æ‰‡åŒºï¼Œæ€»æ‰‡åŒº  */
   uint32_t free_clust, free_sector, total_sector;
-  /*  »ñÈ¡ÄÚ´æÇ°ÐèÒªÏÈ¹ÒÔØ  */
+  /*  èŽ·å–å†…å­˜å‰éœ€è¦å…ˆæŒ‚è½½  */
   f_mount(fs, (const TCHAR*)path, 1);
 
   res = (uint32_t)f_getfree((const TCHAR*)path, (DWORD*)&free_clust, &fs);
   if (!res)
   {
-    total_sector = (fs->n_fatent - 2) * fs->csize;  //¼ÆËã×ÜÉÈÇø
-    free_sector = free_clust * fs->csize;   //¼ÆËã¿ÕÏÐÉÈÇø
+    total_sector = (fs->n_fatent - 2) * fs->csize;  //è®¡ç®—æ€»æ‰‡åŒº
+    free_sector = free_clust * fs->csize;   //è®¡ç®—ç©ºé—²æ‰‡åŒº
 
     #if __MAX_SS != 512
     total_sector *= fs->ssize / 512;
     free_sector  *= fs->ssize / 512;
     #endif
 
-    *total = total_sector >> 1;   //µ¥Î»ÎªKB
+    *total = total_sector >> 1;   //å•ä½ä¸ºKB
     *free  = free_sector  >> 1;
   }
 

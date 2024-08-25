@@ -68,7 +68,7 @@ void USART1_IRQHandler(void)
   }
   else if (USART_GetITStatus(USART1, USART_IT_IDLE) != RESET)
   {
-    /*  读数据寄存器，清除空闲中断标志位  */
+    /*  璇绘暟鎹瘎瀛樺櫒锛屾竻闄ょ┖闂蹭腑鏂爣蹇椾綅  */
     USART_ReceiveData(USART1);
     RxCount = 0;
     RxFlag = 1;

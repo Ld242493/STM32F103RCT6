@@ -16,7 +16,7 @@
 
 #define ROM_SIZE    0x1FFFF7E0  // FLASH Size = 256KB = 0x40000
 #define LAST_PAGE   0x0803FC00  // 0x08040000 - 0x400
-#define BufferSize  512         // ÒòÎªÊÇ16Î»Êı¾İ£¬ËùÒÔ512¸ÕºÃÎª1k
+#define BufferSize  512         // å› ä¸ºæ˜¯16ä½æ•°æ®ï¼Œæ‰€ä»¥512åˆšå¥½ä¸º1k
 
 uint16_t WriteBuffer[BufferSize];
 uint16_t ReadBuffer[BufferSize];

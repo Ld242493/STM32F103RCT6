@@ -22,12 +22,12 @@
 
 /* W25Q16 Config -------------------------------------------------------------*/
 
-#define PageMax            16     //Ò»¸öÉÈÇø16Ò³
-#define SectorMax          16     //Ò»¸ö¿éÓĞ16¸öÉÈÇø
-#define BlockMax           32     //W25Q16ÓĞ32¸ö¿é   
+#define PageMax            16     //ä¸€ä¸ªæ‰‡åŒº16é¡µ
+#define SectorMax          16     //ä¸€ä¸ªå—æœ‰16ä¸ªæ‰‡åŒº
+#define BlockMax           32     //W25Q16æœ‰32ä¸ªå—   
 
-#define PageSize           256    //Ò»Ò³256¸ö×Ö½Ú
-#define SectorSize         4096   //Ò»¸öÉÈÇø4k¸ö×Ö½Ú
+#define PageSize           256    //ä¸€é¡µ256ä¸ªå­—èŠ‚
+#define SectorSize         4096   //ä¸€ä¸ªæ‰‡åŒº4kä¸ªå­—èŠ‚
 
 
 #define W25Q16_WRITE_ENABLE							          0x06

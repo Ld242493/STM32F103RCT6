@@ -41,17 +41,17 @@ void ADC_Configuration(void)
 }
 
 /**
- * @brief ��ȡADCת��ֵ
+ * @brief 获取ADC转换值
  * 
  * @return uint16_t 
  */
 uint16_t ADC_GetValue(void)
 {
-  /* ����ת��ģʽ��Ҫÿ���ֶ����¿���ת�� */ 
+  /* 单次转换模式需要每次手动重新开启转换 */ 
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);  
-  /*  ÿ��ת���ж�ת�����(EOC)��־λ  */
+  /*  每次转换判断转换完成(EOC)标志位  */
   while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
-  /*  ����ģʽֱ�ӻ�ȡת��ֵ���ɣ����Բ���Ҫ�����������  */
+  /*  连续模式直接获取转换值即可，可以不需要上面两句代码  */
   return ADC_GetConversionValue(ADC1);  
 }
 

@@ -2,13 +2,13 @@
 #include "OLED/OLED.h"
 #include "KEY/key.h"
 
-//¹â±êÀàĞÍ±äÁ¿£¬Ä¬ÈÏ·´Ïà
+//å…‰æ ‡ç±»å‹å˜é‡ï¼Œé»˜è®¤åç›¸
 CursorType CurType = CursorReserver; 
 
 int8_t RollSpeed = 4, AnimSpeed = 6;
 uint16_t FPS = 0, FPS_Count = 0;
 
-uint8_t Get_FPS(void)	//»ñÈ¡Ö¡ÂÊ
+uint8_t Get_FPS(void)	//è·å–å¸§ç‡
 {
 	FPS_Count++;
 	return FPS;
@@ -42,11 +42,11 @@ int8_t menu_enter_event(void)
 void main_menu(void)
 {
   opt main_list[] = {
-    {"¹Ø»ú"},
-    {"¹¤¾ß", 0, Tools_menu},
-    {"ÉèÖÃ", 0, Setting_menu},
-    {"Ì«¿ÕÈË", 0, SpaceMan},
-    {"ĞÅÏ¢", 0, Information},
+    {"å…³æœº"},
+    {"å·¥å…·", 0, Tools_menu},
+    {"è®¾ç½®", 0, Setting_menu},
+    {"å¤ªç©ºäºº", 0, SpaceMan},
+    {"ä¿¡æ¯", 0, Information},
     {"..."}
   };
   running_menu(main_list);
@@ -54,23 +54,23 @@ void main_menu(void)
 
 void running_menu(opt *opt_list)
 {
-  int8_t opt_index = 1, cur_index = 0;    //Ñ¡ÏîË÷ÒıÓë¹â±êË÷Òı±äÁ¿    
-  /*  ¹â±ê¶¯»­±äÁ¿  ¾²Ì¬±äÁ¿¿ÉÒÔ±£´æÉÏ¸öÁĞ±í¹â±êÎ»ÖÃ*/
-  static float  curSpos = 0, curEpos = 0; //¹â±êÎ»ÖÃÆğµãÓëÖÕµã
-  static float  curSlen = 0, curElen = 0; //¹â±ê³¤¶ÈÆğµãÓëÖÕµã
-  static float curpos_temp = 0, curlen_temp = 0;  //¹â±êÎ»ÖÃÓë³¤¶È±ä»¯ÁÙÊ±±äÁ¿
+  int8_t opt_index = 1, cur_index = 0;    //é€‰é¡¹ç´¢å¼•ä¸å…‰æ ‡ç´¢å¼•å˜é‡    
+  /*  å…‰æ ‡åŠ¨ç”»å˜é‡  é™æ€å˜é‡å¯ä»¥ä¿å­˜ä¸Šä¸ªåˆ—è¡¨å…‰æ ‡ä½ç½®*/
+  static float  curSpos = 0, curEpos = 0; //å…‰æ ‡ä½ç½®èµ·ç‚¹ä¸ç»ˆç‚¹
+  static float  curSlen = 0, curElen = 0; //å…‰æ ‡é•¿åº¦èµ·ç‚¹ä¸ç»ˆç‚¹
+  static float curpos_temp = 0, curlen_temp = 0;  //å…‰æ ‡ä½ç½®ä¸é•¿åº¦å˜åŒ–ä¸´æ—¶å˜é‡
 
-  int8_t opt_num = 0; //Ñ¡ÏîÊı
+  int8_t opt_num = 0; //é€‰é¡¹æ•°
   int8_t rollVal = 0; 
-  /*  ¼ÆËãÑ¡Ïî¸öÊı  */
+  /*  è®¡ç®—é€‰é¡¹ä¸ªæ•°  */
   while(opt_list[++opt_num].opt_name[0] != '.');
-  opt_num --; //²»´òÓ¡×îºóÒ»¸öÑ¡Ïî
-  /*  ¼ÆËãÑ¡Ïî³¤¶È  */
+  opt_num --; //ä¸æ‰“å°æœ€åä¸€ä¸ªé€‰é¡¹
+  /*  è®¡ç®—é€‰é¡¹é•¿åº¦  */
   for(int i = 0; i <= opt_num; i++)
     opt_list[i].opt_name_len = strlen(opt_list[i].opt_name);  
-  /*  Ñ¡ÏîÆ«ÒÆ±äÁ¿£¬ÓÃÓÚÁĞ±í¹ö¶¯ÏÔÊ¾¶¯»­  */
-  int8_t offset = 0, offset_last = opt_num; //µ±Ç°Æ«ÒÆÁ¿ÓëÉÏ´ÎÆ«ÒÆÁ¿
-  int8_t offset_temp = 0; //Æ«ÒÆ±ä»¯ÁÙÊ±±äÁ¿
+  /*  é€‰é¡¹åç§»å˜é‡ï¼Œç”¨äºåˆ—è¡¨æ»šåŠ¨æ˜¾ç¤ºåŠ¨ç”»  */
+  int8_t offset = 0, offset_last = opt_num; //å½“å‰åç§»é‡ä¸ä¸Šæ¬¡åç§»é‡
+  int8_t offset_temp = 0; //åç§»å˜åŒ–ä¸´æ—¶å˜é‡
 
   while (1)
   {
@@ -78,7 +78,7 @@ void running_menu(opt *opt_list)
     rollVal = menu_roll_event();
     if(rollVal)
     {
-      opt_index += rollVal; //ÏÂÒÆ +1£¬ÉÏÒÆ -1
+      opt_index += rollVal; //ä¸‹ç§» +1ï¼Œä¸Šç§» -1
       cur_index += rollVal;
 
       if(opt_index < 0)               opt_index = 0;
@@ -86,54 +86,54 @@ void running_menu(opt *opt_list)
      
       if(cur_index < 0)               cur_index = 0;
       else if(cur_index > opt_num)    cur_index = opt_num;
-      else if(cur_index > 3)          cur_index = 3;  //¹â±êÏŞÖÆ£¬·ÀÖ¹³¬³öÆÁÄ»Íâ
+      else if(cur_index > 3)          cur_index = 3;  //å…‰æ ‡é™åˆ¶ï¼Œé˜²æ­¢è¶…å‡ºå±å¹•å¤–
     }
-    /*  ¼ÆËãÆ«ÒÆÁ¿£¬Ä¬ÈÏÎª 1£¬µ±Ñ¡ÏîË÷Òı´óÓÚ 3 »ò µÚÒ»´ÎÉÏÒÆ£¬Æ«ÒÆÁ¿±ä»¯  */
+    /*  è®¡ç®—åç§»é‡ï¼Œé»˜è®¤ä¸º 1ï¼Œå½“é€‰é¡¹ç´¢å¼•å¤§äº 3 æˆ– ç¬¬ä¸€æ¬¡ä¸Šç§»ï¼Œåç§»é‡å˜åŒ–  */
     offset = opt_index - cur_index;
-    /*  µÚÒ»´Î »ò Æ«ÒÆÁ¿±ä»¯£¬Ìõ¼şÎªÕæ£¬·ñÔòÎª¼Ù  */
+    /*  ç¬¬ä¸€æ¬¡ æˆ– åç§»é‡å˜åŒ–ï¼Œæ¡ä»¶ä¸ºçœŸï¼Œå¦åˆ™ä¸ºå‡  */
     if(offset - offset_last)
     {
-      offset_temp = (offset - offset_last) * LineHeight;  //¼ÆËãÆ«ÒÆ±ä»¯ÁÙÊ±±äÁ¿
+      offset_temp = (offset - offset_last) * LineHeight;  //è®¡ç®—åç§»å˜åŒ–ä¸´æ—¶å˜é‡
       offset_last = offset;
     }
-    /*  Ê¹Æ«ÒÆÁÙÊ±±ä»¯±äÁ¿Ë¥¼õÎª 0 */
+    /*  ä½¿åç§»ä¸´æ—¶å˜åŒ–å˜é‡è¡°å‡ä¸º 0 */
     if(offset_temp) offset_temp /= RollSpeed;
-    /*  ±éÀúÑ¡Ïî£¬Í¨¹ıÆ«ÒÆÁ¿À´È·¶¨ÏÔÊ¾ÆğµãÑ¡Ïî */
+    /*  éå†é€‰é¡¹ï¼Œé€šè¿‡åç§»é‡æ¥ç¡®å®šæ˜¾ç¤ºèµ·ç‚¹é€‰é¡¹ */
     for (int i = 0; i < 5; i++) 
     {
       if(offset + i > opt_num)  break;
-      if(opt_list[i+offset].opt_name[0] > '~')  //ÅĞ¶ÏµÚÒ»¸ö×Ö·ûÊÇ·ñÎªÖĞÎÄ×Ö·û
+      if(opt_list[i+offset].opt_name[0] > '~')  //åˆ¤æ–­ç¬¬ä¸€ä¸ªå­—ç¬¦æ˜¯å¦ä¸ºä¸­æ–‡å­—ç¬¦
         OLED_ShowChinese(2, Line(i)+offset_temp, opt_list[i+offset].opt_name);
       else
         OLED_ShowString(2, Line(i)+offset_temp, opt_list[i+offset].opt_name, OLED_8X16);
     }
     /*
-      * ¶¯»­ÊµÏÖÔ­Àí£º
-      * Í¨¹ıÆğµãÎ»ÖÃµ½Ä¿±êÎ»ÖÃÖ®¼ä¾àÀëµÄËõ¼õ£¬²¢Í¨¹ıOLEDÆÁ²»¶ÏË¢ĞÂÊµÏÖ¶¯»­Ğ§¹û
+      * åŠ¨ç”»å®ç°åŸç†ï¼š
+      * é€šè¿‡èµ·ç‚¹ä½ç½®åˆ°ç›®æ ‡ä½ç½®ä¹‹é—´è·ç¦»çš„ç¼©å‡ï¼Œå¹¶é€šè¿‡OLEDå±ä¸æ–­åˆ·æ–°å®ç°åŠ¨ç”»æ•ˆæœ
       */
-    /* ¼ÆËãÑ¡ÏîÖÕµãÎ»ÖÃÓëÑ¡ÏîÖÕµã³¤¶È */
+    /* è®¡ç®—é€‰é¡¹ç»ˆç‚¹ä½ç½®ä¸é€‰é¡¹ç»ˆç‚¹é•¿åº¦ */
     curEpos = Line(cur_index);
     curElen = 8 * opt_list[opt_index].opt_name_len + 4;
-    /*  ¼ÆËã¾àÀë  */
+    /*  è®¡ç®—è·ç¦»  */
     curpos_temp = curEpos - curSpos;
     curlen_temp = curElen - curSlen;
-    /*  Ëõ¼õ¾àÀë  */
+    /*  ç¼©å‡è·ç¦»  */
     if(curpos_temp > 1)         curSpos += curpos_temp/AnimSpeed + 1;
     else if(curpos_temp < -1)   curSpos += curpos_temp/AnimSpeed - 1;
     else  curSpos = curEpos;
     if(curlen_temp > 1)         curSlen += curlen_temp/AnimSpeed + 1;
     else if(curlen_temp < -1)   curSlen += curlen_temp/AnimSpeed - 1;
     else  curSlen = curElen;
-    /*  Ñ¡ÏîÑùÊ½´¦Àí  */  
+    /*  é€‰é¡¹æ ·å¼å¤„ç†  */  
     if(CurType == CursorReserver)      
       OLED_ReverseArea(0, curSpos, curSlen, LineHeight);
     else if(CurType == CursorRect)
       OLED_DrawRectangle(0, curSpos, curSlen, LineHeight, OLED_UNFILLED);
     else if(CurType == CursorTail)
       OLED_ShowString(curSlen+2, curSpos+6, "<=", OLED_6X8); 
-    /*  ÏÔÊ¾µ±Ç°Ñ¡ÏîË÷Òı  */    
+    /*  æ˜¾ç¤ºå½“å‰é€‰é¡¹ç´¢å¼•  */    
     OLED_ShowNum(110, 55, opt_index, 2, OLED_6X8);
-    /*  ÏÔÊ¾Ö¡ÂÊ  */
+    /*  æ˜¾ç¤ºå¸§ç‡  */
     OLED_ShowNum(110, 5, Get_FPS(), 2, OLED_6X8);
     OLED_Update();
 

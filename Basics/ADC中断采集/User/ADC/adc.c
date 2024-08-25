@@ -52,13 +52,13 @@ void ADC_Configuration(void)
 }
 
 /**
- * @brief »ñÈ¡ADC×ª»»Öµ
+ * @brief è·å–ADCè½¬æ¢å€¼
  * 
  * @return uint16_t 
  */
 uint16_t ADC_GetValue(void)
 {
-  /* µ¥´Î×ª»»Ä£Ê½ĞèÒªÃ¿´ÎÊÖ¶¯ÖØĞÂ¿ªÆô×ª»» */ 
+  /* å•æ¬¡è½¬æ¢æ¨¡å¼éœ€è¦æ¯æ¬¡æ‰‹åŠ¨é‡æ–°å¼€å¯è½¬æ¢ */ 
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);  
   return ADC_GetConversionValue(ADC1);  
 }

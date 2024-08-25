@@ -9,7 +9,7 @@ void TIM3_Init(void)
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);  
 
   /* Time base configuration */
-  TIM_TimeBaseStructure.TIM_Period = 999;   // 1ms´¥·¢ADC²É¼¯Ò»´Î
+  TIM_TimeBaseStructure.TIM_Period = 999;   // 1msè§¦å‘ADCé‡‡é›†ä¸€æ¬¡
   TIM_TimeBaseStructure.TIM_Prescaler = 71;
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -17,7 +17,7 @@ void TIM3_Init(void)
   TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 
   TIM_ARRPreloadConfig(TIM3, ENABLE);
-  TIM_SelectOutputTrigger(TIM3, TIM_TRGOSource_Update);  // ÉèÖÃ¸üĞÂÊÂ¼ş´¥·¢
+  TIM_SelectOutputTrigger(TIM3, TIM_TRGOSource_Update);  // è®¾ç½®æ›´æ–°äº‹ä»¶è§¦å‘
   /* TIM2 enable counter */
   TIM_Cmd(TIM3, ENABLE);  
 }
@@ -57,7 +57,7 @@ void ADC_DMA_Init(void)
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
   DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;     //Ñ­»·Ä£Ê½
+  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;     //å¾ªç¯æ¨¡å¼
   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
   DMA_Init(DMA1_Channel1, &DMA_InitStructure);
@@ -69,9 +69,9 @@ void ADC_DMA_Init(void)
 
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_InitStructure.ADC_ScanConvMode = ENABLE;        //¶àÍ¨µÀ¿ªÆôÉ¨ÃèÄ£Ê½
+  ADC_InitStructure.ADC_ScanConvMode = ENABLE;        //å¤šé€šé“å¼€å¯æ‰«ææ¨¡å¼
   ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;  
-  ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T3_TRGO;  //Íâ²¿¶¨Ê±Æ÷3´¥·¢
+  ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T3_TRGO;  //å¤–éƒ¨å®šæ—¶å™¨3è§¦å‘
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfChannel = 3;
   ADC_Init(ADC1, &ADC_InitStructure);
@@ -80,9 +80,9 @@ void ADC_DMA_Init(void)
   ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_55Cycles5);  //PC0
   ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 2, ADC_SampleTime_71Cycles5);  //Temperature
   ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 3, ADC_SampleTime_71Cycles5);  //Verf
-  /*  Ê¹ÄÜÍâ²¿´¥·¢  */
+  /*  ä½¿èƒ½å¤–éƒ¨è§¦å‘  */
   ADC_ExternalTrigConvCmd(ADC1, ENABLE);
-  /*  »½ĞÑÎÂ¶È´«¸ĞÆ÷  */
+  /*  å”¤é†’æ¸©åº¦ä¼ æ„Ÿå™¨  */
   ADC_TempSensorVrefintCmd(ENABLE);
   /* Enable ADC1 DMA */
   ADC_DMACmd(ADC1, ENABLE);

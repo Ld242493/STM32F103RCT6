@@ -1,6 +1,6 @@
 #include "sd_card.h"
 
-uint8_t  sd_type = 0; /* SD¿¨µÄÀàĞÍ */
+uint8_t  sd_type = 0; /* SDå¡çš„ç±»å‹ */
 
 /* SPI Drive Config -------------------------------------------------------------*/
 
@@ -54,49 +54,49 @@ void SPI_Configuration(void)
 }
 
 /**
- * @brief Ó²¼şSPI´«ÊäÒ»¸ö×Ö½ÚÊı¾İ
+ * @brief ç¡¬ä»¶SPIä¼ è¾“ä¸€ä¸ªå­—èŠ‚æ•°æ®
  * 
  * @param byte 
  * @return uint8_t 
  */
 uint8_t SPI_ReadWrite(uint8_t byte)
 {
-  /*  ·¢ËÍÊı¾İÇ°ÅĞ¶ÏTXE±êÖ¾Î»ÊÇ·ñÎª1£¬·¢ËÍÊı¾İ»á×Ô¶¯Çå³ıTXE±êÖ¾Î»  */  
+  /*  å‘é€æ•°æ®å‰åˆ¤æ–­TXEæ ‡å¿—ä½æ˜¯å¦ä¸º1ï¼Œå‘é€æ•°æ®ä¼šè‡ªåŠ¨æ¸…é™¤TXEæ ‡å¿—ä½  */  
   while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
   SPI_I2S_SendData(SPI1, byte);
-  /*  ½ÓÊÕÊı¾İÇ°ÅĞ¶ÏRXNE±êÖ¾Î»ÊÇ·ñÎª1£¬½ÓÊÕÊı¾İ»á×Ô¶¯Çå³ıRXNE±êÖ¾Î»  */  
+  /*  æ¥æ”¶æ•°æ®å‰åˆ¤æ–­RXNEæ ‡å¿—ä½æ˜¯å¦ä¸º1ï¼Œæ¥æ”¶æ•°æ®ä¼šè‡ªåŠ¨æ¸…é™¤RXNEæ ‡å¿—ä½  */  
   while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
   return SPI_I2S_ReceiveData(SPI1);
 }
 
 void SPI_SetSpeed(uint8_t BaudRatePrescaler)
 {
-  SPI_Cmd(SPI1, DISABLE);           //ĞŞ¸ÄÇ°ĞèÒªÏÈ¹Ø±ÕSPI  
-  SPI1->CR1 &= 0xFFC7;              //Çå¿Õ  Î»3~5
-  SPI1->CR1 |= BaudRatePrescaler;   //ÉèÖÃ²¨ÌØÂÊ
-  SPI_Cmd(SPI1, ENABLE);            //ĞŞ¸Äºó´ò¿ªSPI
+  SPI_Cmd(SPI1, DISABLE);           //ä¿®æ”¹å‰éœ€è¦å…ˆå…³é—­SPI  
+  SPI1->CR1 &= 0xFFC7;              //æ¸…ç©º  ä½3~5
+  SPI1->CR1 |= BaudRatePrescaler;   //è®¾ç½®æ³¢ç‰¹ç‡
+  SPI_Cmd(SPI1, ENABLE);            //ä¿®æ”¹åæ‰“å¼€SPI
 }
 
 /* SD Card Drive Config -------------------------------------------------------------*/
 
 /**
- * @brief       SD¿¨ È¡ÏûÑ¡Ôñ, ÊÍ·Å SPI×ÜÏß
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       SDå¡ å–æ¶ˆé€‰æ‹©, é‡Šæ”¾ SPIæ€»çº¿
+ * @param       æ— 
+ * @retval      æ— 
  */
 static void sd_deselect(void)
 {
-    SD_CS(1);                       /* È¡ÏûSD¿¨Æ¬Ñ¡ */
-    sd_spi_read_write_byte(0xff);   /* Ìá¹©¶îÍâµÄ8¸öÊ±ÖÓ */
+    SD_CS(1);                       /* å–æ¶ˆSDå¡ç‰‡é€‰ */
+    sd_spi_read_write_byte(0xff);   /* æä¾›é¢å¤–çš„8ä¸ªæ—¶é’Ÿ */
 }
 
 
 /**
- * @brief       µÈ´ı¿¨×¼±¸ºÃ
- * @param       ÎŞ
- * @retval      µÈ´ı½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       ç­‰å¾…å¡å‡†å¤‡å¥½
+ * @param       æ— 
+ * @retval      ç­‰å¾…ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 static uint8_t sd_wait_ready(void)
 {
@@ -110,17 +110,17 @@ static uint8_t sd_wait_ready(void)
         }
 
         t++;
-    } while (t < 0XFFFFFF); /* µÈ´ı */
+    } while (t < 0XFFFFFF); /* ç­‰å¾… */
 
     return SD_ERROR;
 }
 
 /**
- * @brief       SD¿¨ Ñ¡ÖĞ, ²¢µÈ´ı¿¨×¼±¸OK
- * @param       ÎŞ
- * @retval      Ñ¡ÖĞ½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       SDå¡ é€‰ä¸­, å¹¶ç­‰å¾…å¡å‡†å¤‡OK
+ * @param       æ— 
+ * @retval      é€‰ä¸­ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 static uint8_t sd_select(void)
 {
@@ -128,127 +128,127 @@ static uint8_t sd_select(void)
 
     if (sd_wait_ready() == 0)
     {
-        return SD_OK;   /* µÈ´ı³É¹¦ */
+        return SD_OK;   /* ç­‰å¾…æˆåŠŸ */
     }
 
     sd_deselect();
-    return SD_ERROR;    /* µÈ´ıÊ§°Ü */
+    return SD_ERROR;    /* ç­‰å¾…å¤±è´¥ */
 }
 
 /**
- * @brief       µÈ´ıSD¿¨»ØÓ¦
- * @param       response : ÆÚ´ıµÃµ½µÄ»ØÓ¦Öµ
- * @retval      µÈ´ı½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       ç­‰å¾…SDå¡å›åº”
+ * @param       response : æœŸå¾…å¾—åˆ°çš„å›åº”å€¼
+ * @retval      ç­‰å¾…ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 static uint8_t sd_get_response(uint8_t response)
 {
-    uint16_t count = 0xFFFF;    /* µÈ´ı´ÎÊı */
+    uint16_t count = 0xFFFF;    /* ç­‰å¾…æ¬¡æ•° */
 
     while ((sd_spi_read_write_byte(0XFF) != response) && count)
     {
-        count--;    /* µÈ´ıµÃµ½×¼È·µÄ»ØÓ¦ */
+        count--;    /* ç­‰å¾…å¾—åˆ°å‡†ç¡®çš„å›åº” */
     }
 
-    if (count == 0) /* µÈ´ı³¬Ê± */
+    if (count == 0) /* ç­‰å¾…è¶…æ—¶ */
     {
         return SD_ERROR;
     }
 
-    return SD_OK;   /* ÕıÈ·»ØÓ¦ */
+    return SD_OK;   /* æ­£ç¡®å›åº” */
 }
 
 /**
- * @brief       ´ÓSD¿¨¶ÁÈ¡Ò»´ÎÊı¾İ
- *   @note      ¶ÁÈ¡³¤¶È²»ÏŞ, ÓÉlenÖ¸¶¨
- *              ²»¹ıÒ»°ãÎª512×Ö½Ú
- * @param       buf      : Êı¾İ»º´æÇø
- * @param       len      : Òª¶ÁÈ¡µÄÊı¾İ³¤¶È
- * @retval      ¶ÁÈ¡½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       ä»SDå¡è¯»å–ä¸€æ¬¡æ•°æ®
+ *   @note      è¯»å–é•¿åº¦ä¸é™, ç”±lenæŒ‡å®š
+ *              ä¸è¿‡ä¸€èˆ¬ä¸º512å­—èŠ‚
+ * @param       buf      : æ•°æ®ç¼“å­˜åŒº
+ * @param       len      : è¦è¯»å–çš„æ•°æ®é•¿åº¦
+ * @retval      è¯»å–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 static uint8_t sd_receive_data(uint8_t *buf, uint16_t len)
 {
-    if (sd_get_response(0xFE))   /* µÈ´ıSD¿¨·¢»ØÊı¾İÆğÊ¼ÁîÅÆ0xFE */
+    if (sd_get_response(0xFE))   /* ç­‰å¾…SDå¡å‘å›æ•°æ®èµ·å§‹ä»¤ç‰Œ0xFE */
     {
         return SD_ERROR;
     }
 
-    while (len--)   /* ¿ªÊ¼½ÓÊÕÊı¾İ */
+    while (len--)   /* å¼€å§‹æ¥æ”¶æ•°æ® */
     {
         *buf = sd_spi_read_write_byte(0xFF);
         buf++;
     }
 
-    /* ÏÂÃæÊÇ2¸öÎ±CRC£¨dummy CRC£© */
+    /* ä¸‹é¢æ˜¯2ä¸ªä¼ªCRCï¼ˆdummy CRCï¼‰ */
     sd_spi_read_write_byte(0xFF);
     sd_spi_read_write_byte(0xFF);
 
-    return SD_OK;   /* ¶ÁÈ¡³É¹¦ */
+    return SD_OK;   /* è¯»å–æˆåŠŸ */
 }
 
 /**
- * @brief       ÏòSD¿¨Ğ´ÈëÒ»¸öÊı¾İ°ü
- *   @note      Ğ´Èë³¤¶È¹Ì¶¨Îª512×Ö½Ú!!
- * @param       buf      : Êı¾İ»º´æÇø
- * @param       cmd      : Ö¸Áî
-* @retval      ·¢ËÍ½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       å‘SDå¡å†™å…¥ä¸€ä¸ªæ•°æ®åŒ…
+ *   @note      å†™å…¥é•¿åº¦å›ºå®šä¸º512å­—èŠ‚!!
+ * @param       buf      : æ•°æ®ç¼“å­˜åŒº
+ * @param       cmd      : æŒ‡ä»¤
+* @retval      å‘é€ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 static uint8_t sd_send_block(uint8_t *buf, uint8_t cmd)
 {
     uint16_t t;
 
-    if (sd_wait_ready())            /* µÈ´ıready */
+    if (sd_wait_ready())            /* ç­‰å¾…ready */
     {
         return SD_ERROR;
     }
 
-    sd_spi_read_write_byte(cmd);    /* ·¢ËÍ CMD */
+    sd_spi_read_write_byte(cmd);    /* å‘é€ CMD */
 
-    if (cmd != 0XFD)                /* ²»ÊÇ½áÊøÖ¸Áî */
+    if (cmd != 0XFD)                /* ä¸æ˜¯ç»“æŸæŒ‡ä»¤ */
     {
         for (t = 0; t < 512; t++)
         {
-            sd_spi_read_write_byte(buf[t]); /* ·¢ËÍÊı¾İ */
+            sd_spi_read_write_byte(buf[t]); /* å‘é€æ•°æ® */
         }
 
-        sd_spi_read_write_byte(0xFF);       /* ºöÂÔcrc */
+        sd_spi_read_write_byte(0xFF);       /* å¿½ç•¥crc */
         sd_spi_read_write_byte(0xFF);
 
-        t = sd_spi_read_write_byte(0xFF);   /* ½ÓÊÕÏìÓ¦ */
+        t = sd_spi_read_write_byte(0xFF);   /* æ¥æ”¶å“åº” */
 
-        if ((t & 0x1F) != 0x05)             /* Êı¾İ°üÃ»ÓĞ±»½ÓÊÕ */
+        if ((t & 0x1F) != 0x05)             /* æ•°æ®åŒ…æ²¡æœ‰è¢«æ¥æ”¶ */
         {
             return SD_ERROR;
         }
     }
 
-    return SD_OK;   /* Ğ´Èë³É¹¦ */
+    return SD_OK;   /* å†™å…¥æˆåŠŸ */
 }
 
 /**
- * @brief       ÏòSD¿¨·¢ËÍÒ»¸öÃüÁî
- *   @note      ²»Í¬ÃüÁîµÄCRCÖµÔÚ¸Ãº¯ÊıÄÚ²¿×Ô¶¯È·ÈÏ
- * @param       cmd      : Òª·¢ËÍµÄÃüÁî
- *   @note                 ×î¸ßÎ»Îª1 ±íÊ¾ACMD(Ó¦ÓÃÃüÁî)
- *                         ×î¸ßÎ»Îª0 ±íÊ¾CMD(ÆÕÍ¨ÃüÁî)
- * @param       arg      : ÃüÁîµÄ²ÎÊı
- * @retval      SD¿¨·µ»ØµÄÃüÁîÏìÓ¦
+ * @brief       å‘SDå¡å‘é€ä¸€ä¸ªå‘½ä»¤
+ *   @note      ä¸åŒå‘½ä»¤çš„CRCå€¼åœ¨è¯¥å‡½æ•°å†…éƒ¨è‡ªåŠ¨ç¡®è®¤
+ * @param       cmd      : è¦å‘é€çš„å‘½ä»¤
+ *   @note                 æœ€é«˜ä½ä¸º1 è¡¨ç¤ºACMD(åº”ç”¨å‘½ä»¤)
+ *                         æœ€é«˜ä½ä¸º0 è¡¨ç¤ºCMD(æ™®é€šå‘½ä»¤)
+ * @param       arg      : å‘½ä»¤çš„å‚æ•°
+ * @retval      SDå¡è¿”å›çš„å‘½ä»¤å“åº”
  */
 static uint8_t sd_send_cmd(uint8_t cmd, uint32_t arg)
 {
     uint8_t res;
     uint8_t retry = 0;
-    uint8_t crc = 0X01; /* Ä¬ÈÏ CRC = ºöÂÔCRC + Í£Ö¹ */
+    uint8_t crc = 0X01; /* é»˜è®¤ CRC = å¿½ç•¥CRC + åœæ­¢ */
 
-    if (cmd & 0x80)     /* ACMD·¢ËÍÇ°, ĞèÒªÏÈ·¢ËÍÒ»¸ö CMD55 ÃüÁî */
+    if (cmd & 0x80)     /* ACMDå‘é€å‰, éœ€è¦å…ˆå‘é€ä¸€ä¸ª CMD55 å‘½ä»¤ */
     {
-        cmd &= 0x7F;                    /* Çå³ı×î¸ßÎ», »ñÈ¡ACMDÃüÁî */
-        res = sd_send_cmd(CMD55, 0);    /* ·¢ËÍCMD55 */
+        cmd &= 0x7F;                    /* æ¸…é™¤æœ€é«˜ä½, è·å–ACMDå‘½ä»¤ */
+        res = sd_send_cmd(CMD55, 0);    /* å‘é€CMD55 */
 
         if (res > 1)
         {
@@ -256,117 +256,117 @@ static uint8_t sd_send_cmd(uint8_t cmd, uint32_t arg)
         }
     }
 
-    if (cmd != CMD12)   /* µ± cmd ²»µÈÓÚ ¶à¿é¶Á½áÊøÃüÁîÊ±(CMD12), µÈ´ı¿¨Ñ¡ÖĞ³É¹¦ */
+    if (cmd != CMD12)   /* å½“ cmd ä¸ç­‰äº å¤šå—è¯»ç»“æŸå‘½ä»¤æ—¶(CMD12), ç­‰å¾…å¡é€‰ä¸­æˆåŠŸ */
     {
-        sd_deselect();  /* È¡ÏûÉÏ´ÎÆ¬Ñ¡ */
+        sd_deselect();  /* å–æ¶ˆä¸Šæ¬¡ç‰‡é€‰ */
 
         if (sd_select())
         {
-            return 0xFF;/* Ñ¡ÖĞÊ§°Ü */
+            return 0xFF;/* é€‰ä¸­å¤±è´¥ */
         }
     }
 
-    /* ·¢ËÍÃüÁî°ü */
-    sd_spi_read_write_byte(cmd | 0x40); /* ÆğÊ¼ + ÃüÁîË÷ÒıºÅ */
-    sd_spi_read_write_byte(arg >> 24);  /* ²ÎÊı[31 : 24] */
-    sd_spi_read_write_byte(arg >> 16);  /* ²ÎÊı[23 : 16] */
-    sd_spi_read_write_byte(arg >> 8);   /* ²ÎÊı[15 : 8] */
-    sd_spi_read_write_byte(arg);        /* ²ÎÊı[7 : 0] */
+    /* å‘é€å‘½ä»¤åŒ… */
+    sd_spi_read_write_byte(cmd | 0x40); /* èµ·å§‹ + å‘½ä»¤ç´¢å¼•å· */
+    sd_spi_read_write_byte(arg >> 24);  /* å‚æ•°[31 : 24] */
+    sd_spi_read_write_byte(arg >> 16);  /* å‚æ•°[23 : 16] */
+    sd_spi_read_write_byte(arg >> 8);   /* å‚æ•°[15 : 8] */
+    sd_spi_read_write_byte(arg);        /* å‚æ•°[7 : 0] */
 
-    if (cmd == CMD0) crc = 0X95;        /* CMD0 µÄCRCÖµ¹Ì¶¨Îª 0X95 */
+    if (cmd == CMD0) crc = 0X95;        /* CMD0 çš„CRCå€¼å›ºå®šä¸º 0X95 */
 
-    if (cmd == CMD8) crc = 0X87;        /* CMD8 µÄCRCÖµ¹Ì¶¨Îª 0X87 */
+    if (cmd == CMD8) crc = 0X87;        /* CMD8 çš„CRCå€¼å›ºå®šä¸º 0X87 */
 
     sd_spi_read_write_byte(crc);
 
-    if (cmd == CMD12)                   /* cmd µÈÓÚ ¶à¿é¶Á½áÊøÃüÁî(CMD12)Ê± */
+    if (cmd == CMD12)                   /* cmd ç­‰äº å¤šå—è¯»ç»“æŸå‘½ä»¤(CMD12)æ—¶ */
     {
-        sd_spi_read_write_byte(0xff);   /* CMD12 Ìø¹ıÒ»¸ö×Ö½Ú */
+        sd_spi_read_write_byte(0xff);   /* CMD12 è·³è¿‡ä¸€ä¸ªå­—èŠ‚ */
     }
 
 
-    retry = 10; /* ÖØÊÔ´ÎÊı */
+    retry = 10; /* é‡è¯•æ¬¡æ•° */
 
-    do          /* µÈ´ıÏìÓ¦£¬»ò³¬Ê±ÍË³ö */
+    do          /* ç­‰å¾…å“åº”ï¼Œæˆ–è¶…æ—¶é€€å‡º */
     {
         res = sd_spi_read_write_byte(0xFF);
     } while ((res & 0X80) && retry--);
 
-    return res; /* ·µ»Ø×´Ì¬Öµ */
+    return res; /* è¿”å›çŠ¶æ€å€¼ */
 }
 
 /**
- * @brief       »ñÈ¡SD¿¨µÄ×´Ì¬
- * @param       ÎŞ
- * @retval      ¶ÁÈ¡½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       è·å–SDå¡çš„çŠ¶æ€
+ * @param       æ— 
+ * @retval      è¯»å–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_get_status(void)
 {
     uint8_t res;
-    uint8_t retry = 20; /* ·¢ËÍACMD¾­³£Ê§°Ü, ¶à³¢ÊÔ¼¸´Î */
+    uint8_t retry = 20; /* å‘é€ACMDç»å¸¸å¤±è´¥, å¤šå°è¯•å‡ æ¬¡ */
 
     do
     {
-        res = sd_send_cmd(ACMD13, 0);   /* ·¢ACMD13ÃüÁî£¬»ñÈ¡×´Ì¬ */
+        res = sd_send_cmd(ACMD13, 0);   /* å‘ACMD13å‘½ä»¤ï¼Œè·å–çŠ¶æ€ */
     }while(res && retry--);
 
-    sd_deselect();      /* È¡ÏûÆ¬Ñ¡ */
+    sd_deselect();      /* å–æ¶ˆç‰‡é€‰ */
 
     return res;
 }
 
 /**
- * @brief       »ñÈ¡SD¿¨µÄCIDĞÅÏ¢, °üÀ¨ÖÆÔìÉÌĞÅÏ¢µÈ
- * @param       cid_data : ´æ·ÅCIDµÄÄÚ´æ»º³åÇø(ÖÁÉÙ16×Ö½Ú)
- * @retval      ¶ÁÈ¡½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       è·å–SDå¡çš„CIDä¿¡æ¯, åŒ…æ‹¬åˆ¶é€ å•†ä¿¡æ¯ç­‰
+ * @param       cid_data : å­˜æ”¾CIDçš„å†…å­˜ç¼“å†²åŒº(è‡³å°‘16å­—èŠ‚)
+ * @retval      è¯»å–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_get_cid(uint8_t *cid_data)
 {
     uint8_t res;
 
-    res = sd_send_cmd(CMD10, 0);            /* ·¢CMD10ÃüÁî£¬¶ÁCID */
+    res = sd_send_cmd(CMD10, 0);            /* å‘CMD10å‘½ä»¤ï¼Œè¯»CID */
 
     if (res == 0x00)
     {
-        res = sd_receive_data(cid_data, 16);/* ½ÓÊÕ16¸ö×Ö½ÚµÄÊı¾İ */
+        res = sd_receive_data(cid_data, 16);/* æ¥æ”¶16ä¸ªå­—èŠ‚çš„æ•°æ® */
     }
 
-    sd_deselect();  /* È¡ÏûÆ¬Ñ¡ */
+    sd_deselect();  /* å–æ¶ˆç‰‡é€‰ */
 
     return res;
 }
 
 /**
- * @brief       »ñÈ¡SD¿¨µÄCSDĞÅÏ¢£¬°üÀ¨ÈİÁ¿ºÍËÙ¶ÈĞÅÏ¢
- * @param       csd_data : ´æ·ÅCSDµÄÄÚ´æ»º³åÇø(ÖÁÉÙ16×Ö½Ú)
- * @retval      ¶ÁÈ¡½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       è·å–SDå¡çš„CSDä¿¡æ¯ï¼ŒåŒ…æ‹¬å®¹é‡å’Œé€Ÿåº¦ä¿¡æ¯
+ * @param       csd_data : å­˜æ”¾CSDçš„å†…å­˜ç¼“å†²åŒº(è‡³å°‘16å­—èŠ‚)
+ * @retval      è¯»å–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_get_csd(uint8_t *csd_data)
 {
     uint8_t res;
-    res = sd_send_cmd(CMD9, 0);             /* ·¢CMD9ÃüÁî£¬¶ÁCSD */
+    res = sd_send_cmd(CMD9, 0);             /* å‘CMD9å‘½ä»¤ï¼Œè¯»CSD */
 
     if (res == 0)
     {
-        res = sd_receive_data(csd_data, 16);/* ½ÓÊÕ16¸ö×Ö½ÚµÄÊı¾İ */
+        res = sd_receive_data(csd_data, 16);/* æ¥æ”¶16ä¸ªå­—èŠ‚çš„æ•°æ® */
     }
 
-    sd_deselect();  /* È¡ÏûÆ¬Ñ¡ */
+    sd_deselect();  /* å–æ¶ˆç‰‡é€‰ */
 
     return res;
 }
 
 /**
- * @brief       »ñÈ¡SD¿¨µÄ×ÜÉÈÇøÊı(ÉÈÇøÊı)
- *   @note      Ã¿ÉÈÇøµÄ×Ö½ÚÊı±ØÎª512, Èç¹û²»ÊÇ512, Ôò³õÊ¼»¯²»ÄÜÍ¨¹ı
- * @param       ÎŞ
- * @retval      SD¿¨ÈİÁ¿(ÉÈÇøÊı), »»³É×Ö½ÚÊıÒª * 512
+ * @brief       è·å–SDå¡çš„æ€»æ‰‡åŒºæ•°(æ‰‡åŒºæ•°)
+ *   @note      æ¯æ‰‡åŒºçš„å­—èŠ‚æ•°å¿…ä¸º512, å¦‚æœä¸æ˜¯512, åˆ™åˆå§‹åŒ–ä¸èƒ½é€šè¿‡
+ * @param       æ— 
+ * @retval      SDå¡å®¹é‡(æ‰‡åŒºæ•°), æ¢æˆå­—èŠ‚æ•°è¦ * 512
  */
 uint32_t sd_get_sector_count(void)
 {
@@ -375,58 +375,58 @@ uint32_t sd_get_sector_count(void)
     uint8_t n;
     uint16_t csize;
 
-    if (sd_get_csd(csd) != 0)       /* È¡CSDĞÅÏ¢£¬Èç¹ûÆÚ¼ä³ö´í£¬·µ»Ø0 */
+    if (sd_get_csd(csd) != 0)       /* å–CSDä¿¡æ¯ï¼Œå¦‚æœæœŸé—´å‡ºé”™ï¼Œè¿”å›0 */
     {
-        return 0;                   /* ·µ»Ø0±íÊ¾»ñÈ¡ÈİÁ¿Ê§°Ü */
+        return 0;                   /* è¿”å›0è¡¨ç¤ºè·å–å®¹é‡å¤±è´¥ */
     }
 
-    /* Èç¹ûÎªSDHC¿¨£¬°´ÕÕÏÂÃæ·½Ê½¼ÆËã */
-    if ((csd[0] & 0xC0) == 0x40)    /* V2.00µÄ¿¨ */
+    /* å¦‚æœä¸ºSDHCå¡ï¼ŒæŒ‰ç…§ä¸‹é¢æ–¹å¼è®¡ç®— */
+    if ((csd[0] & 0xC0) == 0x40)    /* V2.00çš„å¡ */
     {
         csize = csd[9] + ((uint16_t)csd[8] << 8) + ((uint32_t)(csd[7] & 63) << 16) + 1;
-        capacity = (uint32_t)csize << 10;       /* µÃµ½ÉÈÇøÊı */
+        capacity = (uint32_t)csize << 10;       /* å¾—åˆ°æ‰‡åŒºæ•° */
     }
-    else    /* V1.XXµÄ¿¨ / MMC V3¿¨ */
+    else    /* V1.XXçš„å¡ / MMC V3å¡ */
     {
         n = (csd[5] & 15) + ((csd[10] & 128) >> 7) + ((csd[9] & 3) << 1) + 2;
         csize = (csd[8] >> 6) + ((uint16_t)csd[7] << 2) + ((uint16_t)(csd[6] & 3) << 10) + 1;
-        capacity = (uint32_t)csize << (n - 9);  /* µÃµ½ÉÈÇøÊı */
+        capacity = (uint32_t)csize << (n - 9);  /* å¾—åˆ°æ‰‡åŒºæ•° */
     }
 
-    return capacity;    /* ×¢ÒâÕâÀï·µ»ØµÄÊÇÉÈÇøÊıÁ¿, ²»ÊÇÊµ¼ÊÈİÁ¿µÄ×Ö½ÚÊı, »»³É×Ö½ÚÊı µÃ * 512 */
+    return capacity;    /* æ³¨æ„è¿™é‡Œè¿”å›çš„æ˜¯æ‰‡åŒºæ•°é‡, ä¸æ˜¯å®é™…å®¹é‡çš„å­—èŠ‚æ•°, æ¢æˆå­—èŠ‚æ•° å¾— * 512 */
 }
 
 /**
- * @brief       ³õÊ¼»¯SD¿¨
- * @param       ÎŞ
- * @retval      ³õÊ¼»¯½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       åˆå§‹åŒ–SDå¡
+ * @param       æ— 
+ * @retval      åˆå§‹åŒ–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_init(void)
 {
-    uint8_t res;        /*  ´æ·ÅSD¿¨µÄ·µ»ØÖµ */
-    uint16_t retry;     /*  ÓÃÀ´½øĞĞ³¬Ê±¼ÆÊı */
+    uint8_t res;        /*  å­˜æ”¾SDå¡çš„è¿”å›å€¼ */
+    uint16_t retry;     /*  ç”¨æ¥è¿›è¡Œè¶…æ—¶è®¡æ•° */
     uint8_t ocr[4];
     uint16_t i;
     uint8_t cmd;
 
-    SPI_Configuration();      /* ³õÊ¼»¯IO */
-    sd_spi_speed_low(); /* ÉèÖÃµ½µÍËÙÄ£Ê½ */
+    SPI_Configuration();      /* åˆå§‹åŒ–IO */
+    sd_spi_speed_low(); /* è®¾ç½®åˆ°ä½é€Ÿæ¨¡å¼ */
 
     for (i = 0; i < 10; i++)
     {
-        sd_spi_read_write_byte(0XFF);       /* ·¢ËÍ×îÉÙ74¸öÂö³å */
+        sd_spi_read_write_byte(0XFF);       /* å‘é€æœ€å°‘74ä¸ªè„‰å†² */
     }
 
     retry = 20;
 
     do
     {
-        res = sd_send_cmd(CMD0, 0);         /* ½øÈëIDLE×´Ì¬ */
+        res = sd_send_cmd(CMD0, 0);         /* è¿›å…¥IDLEçŠ¶æ€ */
     } while ((res != 0X01) && retry--);
 
-    sd_type = 0;        /* Ä¬ÈÏÎŞ¿¨ */
+    sd_type = 0;        /* é»˜è®¤æ— å¡ */
 
     if (res == 0X01)
     {
@@ -434,68 +434,68 @@ uint8_t sd_init(void)
         {
             for (i = 0; i < 4; i++)
             {
-                ocr[i] = sd_spi_read_write_byte(0XFF);  /* µÃµ½R7µÄ32Î»ÏìÓ¦ */
+                ocr[i] = sd_spi_read_write_byte(0XFF);  /* å¾—åˆ°R7çš„32ä½å“åº” */
             }
 
-            if (ocr[2] == 0X01 && ocr[3] == 0XAA)       /* ¿¨ÊÇ·ñÖ§³Ö2.7~3.6V */
+            if (ocr[2] == 0X01 && ocr[3] == 0XAA)       /* å¡æ˜¯å¦æ”¯æŒ2.7~3.6V */
             {
                 retry = 1000;
 
                 do
                 {
-                    res = sd_send_cmd(ACMD41, 1UL << 30);   /* ·¢ËÍACMD41 */
+                    res = sd_send_cmd(ACMD41, 1UL << 30);   /* å‘é€ACMD41 */
                 } while (res && retry--);
 
-                if (retry && sd_send_cmd(CMD58, 0) == 0)    /* ¼ø±ğSD2.0¿¨°æ±¾¿ªÊ¼ */
+                if (retry && sd_send_cmd(CMD58, 0) == 0)    /* é‰´åˆ«SD2.0å¡ç‰ˆæœ¬å¼€å§‹ */
                 {
                     for (i = 0; i < 4; i++)
                     {
-                        ocr[i] = sd_spi_read_write_byte(0XFF);  /* µÃµ½OCRÖµ */
+                        ocr[i] = sd_spi_read_write_byte(0XFF);  /* å¾—åˆ°OCRå€¼ */
                     }
 
-                    if (ocr[0] & 0x40)          /* ¼ì²éCCS */
+                    if (ocr[0] & 0x40)          /* æ£€æŸ¥CCS */
                     {
-                        sd_type = SD_TYPE_V2HC; /* V2.0 SDHC¿¨ */
+                        sd_type = SD_TYPE_V2HC; /* V2.0 SDHCå¡ */
                     }
                     else
                     {
-                        sd_type = SD_TYPE_V2;   /* V2.0 ¿¨ */
+                        sd_type = SD_TYPE_V2;   /* V2.0 å¡ */
                     }
                 }
             }
         }
         else     /* SD V1.x / MMC V3 */
         {
-            res = sd_send_cmd(ACMD41, 0);   /* ·¢ËÍACMD41 */
+            res = sd_send_cmd(ACMD41, 0);   /* å‘é€ACMD41 */
             retry = 1000;
 
             if (res <= 1)
             {
-                sd_type = SD_TYPE_V1;   /* SD V1¿¨ */
-                cmd = ACMD41;           /* ÃüÁîµÈÓÚ ACMD41 */
+                sd_type = SD_TYPE_V1;   /* SD V1å¡ */
+                cmd = ACMD41;           /* å‘½ä»¤ç­‰äº ACMD41 */
             }
-            else     /* MMC¿¨²»Ö§³Ö ACMD41 Ê¶±ğ */
+            else     /* MMCå¡ä¸æ”¯æŒ ACMD41 è¯†åˆ« */
             {
                 sd_type = SD_TYPE_MMC;  /* MMC V3 */
-                cmd = CMD1;             /* ÃüÁîµÈÓÚ CMD1 */
+                cmd = CMD1;             /* å‘½ä»¤ç­‰äº CMD1 */
             }
 
             do
             {
-                res = sd_send_cmd(cmd, 0);  /* ·¢ËÍ ACMD41 / CMD1 */
-            } while (res && retry--);       /* µÈ´ıÍË³öIDLEÄ£Ê½ */
+                res = sd_send_cmd(cmd, 0);  /* å‘é€ ACMD41 / CMD1 */
+            } while (res && retry--);       /* ç­‰å¾…é€€å‡ºIDLEæ¨¡å¼ */
 
             if (retry == 0 || sd_send_cmd(CMD16, 512) != 0)
             {
-                sd_type = SD_TYPE_ERR;      /* ´íÎóµÄ¿¨ */
+                sd_type = SD_TYPE_ERR;      /* é”™è¯¯çš„å¡ */
             }
         }
     }
 
-    sd_deselect();          /* È¡ÏûÆ¬Ñ¡ */
-    sd_spi_speed_high();    /* ¸ßËÙÄ£Ê½ */
+    sd_deselect();          /* å–æ¶ˆç‰‡é€‰ */
+    sd_spi_speed_high();    /* é«˜é€Ÿæ¨¡å¼ */
 
-    if (sd_type)            /* ¿¨ÀàĞÍÓĞĞ§, ³õÊ¼»¯Íê³É */
+    if (sd_type)            /* å¡ç±»å‹æœ‰æ•ˆ, åˆå§‹åŒ–å®Œæˆ */
     {
         return SD_OK;
     }
@@ -504,13 +504,13 @@ uint8_t sd_init(void)
 }
 
 /**
- * @brief       ¶ÁSD¿¨(fatfs/usbµ÷ÓÃ)
- * @param       pbuf  : Êı¾İ»º´æÇø
- * @param       saddr : ÉÈÇøµØÖ·
- * @param       cnt   : ÉÈÇø¸öÊı
- * @retval      ¶ÁÈ¡½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       è¯»SDå¡(fatfs/usbè°ƒç”¨)
+ * @param       pbuf  : æ•°æ®ç¼“å­˜åŒº
+ * @param       saddr : æ‰‡åŒºåœ°å€
+ * @param       cnt   : æ‰‡åŒºä¸ªæ•°
+ * @retval      è¯»å–ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
@@ -519,62 +519,62 @@ uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 
     if (sd_type != SD_TYPE_V2HC)
     {
-        lsaddr <<= 9;   /* ×ª»»Îª×Ö½ÚµØÖ· */
+        lsaddr <<= 9;   /* è½¬æ¢ä¸ºå­—èŠ‚åœ°å€ */
     }
 
     if (cnt == 1)
     {
-        res = sd_send_cmd(CMD17, lsaddr);       /* ¶ÁÃüÁî */
+        res = sd_send_cmd(CMD17, lsaddr);       /* è¯»å‘½ä»¤ */
 
-        if (res == 0)   /* Ö¸Áî·¢ËÍ³É¹¦ */
+        if (res == 0)   /* æŒ‡ä»¤å‘é€æˆåŠŸ */
         {
-            res = sd_receive_data(pbuf, 512);   /* ½ÓÊÕ512¸ö×Ö½Ú */
+            res = sd_receive_data(pbuf, 512);   /* æ¥æ”¶512ä¸ªå­—èŠ‚ */
         }
     }
     else
     {
-        res = sd_send_cmd(CMD18, lsaddr);       /* Á¬Ğø¶ÁÃüÁî */
+        res = sd_send_cmd(CMD18, lsaddr);       /* è¿ç»­è¯»å‘½ä»¤ */
 
         do
         {
-            res = sd_receive_data(pbuf, 512);   /* ½ÓÊÕ512¸ö×Ö½Ú */
+            res = sd_receive_data(pbuf, 512);   /* æ¥æ”¶512ä¸ªå­—èŠ‚ */
             pbuf += 512;
         } while (--cnt && res == 0);
 
-        sd_send_cmd(CMD12, 0);  /* ·¢ËÍÍ£Ö¹ÃüÁî */
+        sd_send_cmd(CMD12, 0);  /* å‘é€åœæ­¢å‘½ä»¤ */
     }
 
-    sd_deselect();  /* È¡ÏûÆ¬Ñ¡ */
+    sd_deselect();  /* å–æ¶ˆç‰‡é€‰ */
     return res;
 }
 
 /**
- * @brief       Ğ´SD¿¨(fatfs/usbµ÷ÓÃ)
- * @param       pbuf  : Êı¾İ»º´æÇø
- * @param       saddr : ÉÈÇøµØÖ·
- * @param       cnt   : ÉÈÇø¸öÊı
- * @retval      Ğ´Èë½á¹û
- *              SD_OK,      ³É¹¦
- *              SD_ERROR,   Ê§°Ü
+ * @brief       å†™SDå¡(fatfs/usbè°ƒç”¨)
+ * @param       pbuf  : æ•°æ®ç¼“å­˜åŒº
+ * @param       saddr : æ‰‡åŒºåœ°å€
+ * @param       cnt   : æ‰‡åŒºä¸ªæ•°
+ * @retval      å†™å…¥ç»“æœ
+ *              SD_OK,      æˆåŠŸ
+ *              SD_ERROR,   å¤±è´¥
  */
 uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
-    uint8_t retry = 20; /* ·¢ËÍACMD¾­³£Ê§°Ü, ¶à³¢ÊÔ¼¸´Î */
+    uint8_t retry = 20; /* å‘é€ACMDç»å¸¸å¤±è´¥, å¤šå°è¯•å‡ æ¬¡ */
     uint8_t res;
     long long lsaddr = saddr;
 
     if (sd_type != SD_TYPE_V2HC)
     {
-        lsaddr <<= 9;   /* ×ª»»Îª×Ö½ÚµØÖ· */
+        lsaddr <<= 9;   /* è½¬æ¢ä¸ºå­—èŠ‚åœ°å€ */
     }
 
     if (cnt == 1)
     {
-        res = sd_send_cmd(CMD24, lsaddr);   /* ¶ÁÃüÁî */
+        res = sd_send_cmd(CMD24, lsaddr);   /* è¯»å‘½ä»¤ */
 
-        if (res == 0)   /* Ö¸Áî·¢ËÍ³É¹¦ */
+        if (res == 0)   /* æŒ‡ä»¤å‘é€æˆåŠŸ */
         {
-            res = sd_send_block(pbuf, 0xFE);/* Ğ´512¸ö×Ö½Ú */
+            res = sd_send_block(pbuf, 0xFE);/* å†™512ä¸ªå­—èŠ‚ */
         }
     }
     else
@@ -583,24 +583,24 @@ uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
         {
             do
             {
-                sd_send_cmd(ACMD23, cnt);   /* ·¢ËÍ ACMD23 Ö¸Áî */
+                sd_send_cmd(ACMD23, cnt);   /* å‘é€ ACMD23 æŒ‡ä»¤ */
             }while(res && retry--);
         }
 
-        res = sd_send_cmd(CMD25, lsaddr);   /* Á¬Ğø¶ÁÃüÁî */
+        res = sd_send_cmd(CMD25, lsaddr);   /* è¿ç»­è¯»å‘½ä»¤ */
 
         if (res == 0)
         {
             do
             {
-                res = sd_send_block(pbuf, 0xFC);    /* Ğ´ÈëÒ»¸öblock, 512¸ö×Ö½Ú */
+                res = sd_send_block(pbuf, 0xFC);    /* å†™å…¥ä¸€ä¸ªblock, 512ä¸ªå­—èŠ‚ */
                 pbuf += 512;
             } while (--cnt && res == 0);
 
-            res = sd_send_block(0, 0xFD);   /* Ğ´ÈëÒ»¸öblock, 512¸ö×Ö½Ú */
+            res = sd_send_block(0, 0xFD);   /* å†™å…¥ä¸€ä¸ªblock, 512ä¸ªå­—èŠ‚ */
         }
     }
 
-    sd_deselect();/* È¡ÏûÆ¬Ñ¡ */
+    sd_deselect();/* å–æ¶ˆç‰‡é€‰ */
     return res;
 }

@@ -28,7 +28,7 @@ int main(void)
   OLED_ShowString(20, 0, "ADC demo", OLED_8X16);
   while(1)
   {
-    // ADC_GetValue();  //adcµ¥´Î×ª»»ÅäºÏdma·ÇÑ­»·Ä£Ê½ĞèÒª²»¶ÏÆô¶¯×ª»»
+    // ADC_GetValue();  //adcå•æ¬¡è½¬æ¢é…åˆdmaéå¾ªç¯æ¨¡å¼éœ€è¦ä¸æ–­å¯åŠ¨è½¬æ¢
 
     memset(text, 0, 20);
     volt = adcBuffer[0]*3.3f/4096;

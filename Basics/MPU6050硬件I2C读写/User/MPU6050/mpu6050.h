@@ -15,7 +15,7 @@
 
 /* MPU6050 Config -------------------------------------------------------------*/
 
-#define MPU6050_ADDRESS       0xD0    //»⁄»Î∂¡–¥Œª
+#define MPU6050_ADDRESS       0xD0    //ËûçÂÖ•ËØªÂÜô‰Ωç
 
 #define	MPU6050_SMPLRT_DIV		0x19
 #define	MPU6050_CONFIG			  0x1A

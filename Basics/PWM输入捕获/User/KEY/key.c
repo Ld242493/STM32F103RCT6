@@ -21,7 +21,7 @@ void key_init(void)
 }
 
 /**
- * @brief  °´¼üÉ¨Ãè
+ * @brief  æŒ‰é”®æ‰«æ
  * @param  void
  * @retval void
  */
@@ -48,9 +48,9 @@ void key_scan(void)
   else Key2_cnt = 0;
 }
 /**
- * @brief  »ñÈ¡°´¼üÖµ
+ * @brief  è·å–æŒ‰é”®å€¼
  * @param  void
- * @retval key_type °´¼üÖµÀàĞÍ
+ * @retval key_type æŒ‰é”®å€¼ç±»å‹
  */
 key_type key_GetVal(void)
 {

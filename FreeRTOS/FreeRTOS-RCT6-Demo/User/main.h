@@ -7,8 +7,8 @@
 #include "Systick.h"
 #include "usart.h"
 
-void StartTask(void * pvParameters);          //任务声明
-void Task1(void * pvParameters);              //任务声明
-void Task2(void * pvParameters);              //任务声明
+void StartTask(void * pvParameters);          //浠诲姟澹版槑
+void Task1(void * pvParameters);              //浠诲姟澹版槑
+void Task2(void * pvParameters);              //浠诲姟澹版槑
 
 #endif 

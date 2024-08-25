@@ -12,18 +12,18 @@ static void IIC_GPIO_Init(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
   GPIO_Init(IIC_PORT, &GPIO_InitStructure);
   
-  GPIO_SetBits(IIC_PORT, IIC_SCL | IIC_SDA);  //���ߵ�ƽ���ͷ�����
+  GPIO_SetBits(IIC_PORT, IIC_SCL | IIC_SDA);  //拉高电平，释放总线
 }
 
 /**
- * @brief IIC��ʼ�������Ȱ�SDA���ͣ�Ȼ������SCL
+ * @brief IIC起始条件，先把SDA拉低，然后拉低SCL
  * 
  */
 static void IIC_Start(void)
 {
-  /*  Ϊ�˼���ָ����ַ�����ݣ������ظ���ʼ����,��Ҫ������SDA��Ȼ������SCL
-      ������ͷ�SCL�������ʱSDA�ǵ͵�ƽ�Ļ�������ͷ�SDA���൱����ֹλ�������� 
-      ���ߵ�SCL��ʱ���ɶ�SDA���ж�������Ϊ��ֹ������Ƚ�SDA�ͷ�   */
+  /*  为了兼容指定地址读数据，生成重复起始条件,需要先拉高SDA，然后拉高SCL
+      如果先释放SCL，假设此时SDA是低电平的话，随后释放SDA就相当于终止位的情形了 
+      或者当SCL高时，可对SDA进行读操作，为防止误读，先将SDA释放   */
   IIC_SDA_Write(1); 
   IIC_SCL_Write(1);
   IIC_SDA_Write(0);
@@ -31,7 +31,7 @@ static void IIC_Start(void)
 }
 
 /**
- * @brief IICֹͣ������SCL�����ߣ�SDA������
+ * @brief IIC停止条件，SCL先拉高，SDA再拉高
  * 
  */
 static void IIC_Stop(void)
@@ -42,7 +42,7 @@ static void IIC_Stop(void)
 }
 
 /**
- * @brief IIC����һ���ֽ����ݣ�SCL�͵�ƽ����д���ݵ�SDA�ϣ��ߵ�ƽ�ӻ�������
+ * @brief IIC发送一个字节数据，SCL低电平主机写数据到SDA上，高电平从机读数据
  * 
  * @param byte 
  */
@@ -51,27 +51,27 @@ static void IIC_SendByte(uint8_t byte)
   uint8_t i;
   for (i = 0; i < 8; i++)
   {
-    IIC_SDA_Write(byte & (0x80 >> i));  //��λ����
+    IIC_SDA_Write(byte & (0x80 >> i));  //高位先行
     IIC_SCL_Write(1);
     IIC_SCL_Write(0);
   }
 }
 
 /**
- * @brief IIC����һ���ֽڣ�SCL�ߵ�ƽ������ȡ���ݣ��͵�ƽ�ӻ�д���ݵ�SDA
+ * @brief IIC接收一个字节，SCL高电平主机读取数据，低电平从机写数据到SDA
  * 
  * @return uint8_t 
  */
 static uint8_t IIC_ReceiveByte(void)
 {
   uint8_t i,byte = 0x00;
-  /*  �����ͷ�SDA����ֹ���Ŵӻ�д����  */
+  /*  主机释放SDA，防止干扰从机写数据  */
   IIC_SDA_Write(1);
 
   for (i = 0; i < 8; i++)
   {
     IIC_SCL_Write(1);   
-    if(IIC_SDA_Read)  byte |= (0x80 >> i);  //�����ߵ�ƽ��byte��Ӧλд1������Ĭ��Ϊ0
+    if(IIC_SDA_Read)  byte |= (0x80 >> i);  //读到高电平，byte对应位写1，否则默认为0
     IIC_SCL_Write(0);
   }
   return byte;
@@ -79,9 +79,9 @@ static uint8_t IIC_ReceiveByte(void)
 
 
 /**
- * @brief IIC����һ������λ��SCL�͵�ƽ����д���ݵ�SDA�ϣ��ߵ�ƽ�ӻ�������
+ * @brief IIC发送一个数据位，SCL低电平主机写数据到SDA上，高电平从机读数据
  * 
- * @param bit 0 ��ʾӦ�� 1 ��ʾ��Ӧ��
+ * @param bit 0 表示应答， 1 表示非应答
  */
 static void IIC_SendAck(uint8_t bit)
 {
@@ -91,17 +91,17 @@ static void IIC_SendAck(uint8_t bit)
 }
 
 /**
- * @brief IIC����һ���ֽڣ�SCL�ߵ�ƽ������ȡ���ݣ��͵�ƽ�ӻ�д���ݵ�SDA
+ * @brief IIC接收一个字节，SCL高电平主机读取数据，低电平从机写数据到SDA
  * 
  * @return uint8_t 
  */
 static uint8_t IIC_ReceiveAck(void)
 {
   uint8_t bit;
-  /*  �����ͷ�SDA����ֹ���Ŵӻ�д����  */
-  IIC_SDA_Write(1);   //����д1���������������λΪ1���ӻ������Ӧ�������
+  /*  主机释放SDA，防止干扰从机写数据  */
+  IIC_SDA_Write(1);   //这里写1不代表后面读到的位为1，从机如果有应答会拉低
   IIC_SCL_Write(1);   
-  bit = IIC_SDA_Read; // 0 ��ʾ���յ�Ӧ�� 1��ʾû�н��յ�Ӧ��
+  bit = IIC_SDA_Read; // 0 表示接收到应答， 1表示没有接收到应答
   IIC_SCL_Write(0);
   return bit;
 }
@@ -143,17 +143,17 @@ void MPU6050_Init(void)
 {
   IIC_GPIO_Init();
 	
-  /*  ��Դ�����Ĵ���1��ȡ��˯��ģʽ��ѡ��ʱ��ԴΪX��������  */
+  /*  电源管理寄存器1，取消睡眠模式，选择时钟源为X轴陀螺仪  */
 	MPU6050_WriteReg(MPU6050_PWR_MGMT_1, 0x01);
-  /*  ��Դ�����Ĵ���2������Ĭ��ֵ0���������������  */
+  /*  电源管理寄存器2，保持默认值0，所有轴均不待机  */
 	MPU6050_WriteReg(MPU6050_PWR_MGMT_2, 0x00);
-  /*  �����ʷ�Ƶ�Ĵ��������ò�����  */
+  /*  采样率分频寄存器，配置采样率  */
 	MPU6050_WriteReg(MPU6050_SMPLRT_DIV, 0x09);
-  /*  ���üĴ���������DLPF  */
+  /*  配置寄存器，配置DLPF  */
 	MPU6050_WriteReg(MPU6050_CONFIG, 0x06);			  
-  /*  ���������üĴ�����ѡ��������Ϊ��2000��  */
+  /*  陀螺仪配置寄存器，选择满量程为±2000°  */
 	MPU6050_WriteReg(MPU6050_GYRO_CONFIG, 0x18);
-  /*  ���ٶȼ����üĴ�����ѡ��������Ϊ��16g  */
+  /*  加速度计配置寄存器，选择满量程为±16g  */
 	MPU6050_WriteReg(MPU6050_ACCEL_CONFIG, 0x18);	
 }
 

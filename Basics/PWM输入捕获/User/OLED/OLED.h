@@ -4,36 +4,36 @@
 #include <stdint.h>
 #include "OLED_Data.h"
 
-/*²ÎÊıºê¶¨Òå*********************/
+/*å‚æ•°å®å®šä¹‰*********************/
 
-/*FontSize²ÎÊıÈ¡Öµ*/
-/*´Ë²ÎÊıÖµ²»½öÓÃÓÚÅĞ¶Ï£¬¶øÇÒÓÃÓÚ¼ÆËãºáÏò×Ö·ûÆ«ÒÆ£¬Ä¬ÈÏÖµÎª×ÖÌåÏñËØ¿í¶È*/
+/*FontSizeå‚æ•°å–å€¼*/
+/*æ­¤å‚æ•°å€¼ä¸ä»…ç”¨äºåˆ¤æ–­ï¼Œè€Œä¸”ç”¨äºè®¡ç®—æ¨ªå‘å­—ç¬¦åç§»ï¼Œé»˜è®¤å€¼ä¸ºå­—ä½“åƒç´ å®½åº¦*/
 #define OLED_8X16				8
 #define OLED_6X8				6
 
-/*IsFilled²ÎÊıÊıÖµ*/
+/*IsFilledå‚æ•°æ•°å€¼*/
 #define OLED_UNFILLED			0
 #define OLED_FILLED				1
 
-/*********************²ÎÊıºê¶¨Òå*/
+/*********************å‚æ•°å®å®šä¹‰*/
 
 
-/*º¯ÊıÉùÃ÷*********************/
+/*å‡½æ•°å£°æ˜*********************/
 
-/*³õÊ¼»¯º¯Êı*/
+/*åˆå§‹åŒ–å‡½æ•°*/
 void OLED_Init(void);
 
-/*¸üĞÂº¯Êı*/
+/*æ›´æ–°å‡½æ•°*/
 void OLED_Update(void);
 void OLED_UpdateArea(uint8_t X, uint8_t Y, uint8_t Width, uint8_t Height);
 
-/*ÏÔ´æ¿ØÖÆº¯Êı*/
+/*æ˜¾å­˜æ§åˆ¶å‡½æ•°*/
 void OLED_Clear(void);
 void OLED_ClearArea(uint8_t X, uint8_t Y, uint8_t Width, uint8_t Height);
 void OLED_Reverse(void);
 void OLED_ReverseArea(uint8_t X, uint8_t Y, uint8_t Width, uint8_t Height);
 
-/*ÏÔÊ¾º¯Êı*/
+/*æ˜¾ç¤ºå‡½æ•°*/
 void OLED_ShowChar(uint8_t X, uint8_t Y, char Char, uint8_t FontSize);
 void OLED_ShowString(uint8_t X, uint8_t Y, char *String, uint8_t FontSize);
 void OLED_ShowNum(uint8_t X, uint8_t Y, uint32_t Number, uint8_t Length, uint8_t FontSize);
@@ -45,7 +45,7 @@ void OLED_ShowChinese(uint8_t X, uint8_t Y, char *Chinese);
 void OLED_ShowImage(uint8_t X, uint8_t Y, uint8_t Width, uint8_t Height, const uint8_t *Image);
 void OLED_Printf(uint8_t X, uint8_t Y, uint8_t FontSize, char *format, ...);
 
-/*»æÍ¼º¯Êı*/
+/*ç»˜å›¾å‡½æ•°*/
 void OLED_DrawPoint(uint8_t X, uint8_t Y);
 uint8_t OLED_GetPoint(uint8_t X, uint8_t Y);
 void OLED_DrawLine(uint8_t X0, uint8_t Y0, uint8_t X1, uint8_t Y1);
@@ -55,10 +55,10 @@ void OLED_DrawCircle(uint8_t X, uint8_t Y, uint8_t Radius, uint8_t IsFilled);
 void OLED_DrawEllipse(uint8_t X, uint8_t Y, uint8_t A, uint8_t B, uint8_t IsFilled);
 void OLED_DrawArc(uint8_t X, uint8_t Y, uint8_t Radius, int16_t StartAngle, int16_t EndAngle, uint8_t IsFilled);
 
-/*********************º¯ÊıÉùÃ÷*/
+/*********************å‡½æ•°å£°æ˜*/
 
 #endif
 
 
-/*****************½­Ğ­¿Æ¼¼|°æÈ¨ËùÓĞ****************/
+/*****************æ±Ÿåç§‘æŠ€|ç‰ˆæƒæ‰€æœ‰****************/
 /*****************jiangxiekeji.com*****************/

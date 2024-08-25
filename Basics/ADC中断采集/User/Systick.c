@@ -37,36 +37,36 @@ void delay_ms(__IO uint32_t nTime)
 
 //void delay_init(void)
 //{
-//	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);	//Ñ¡ÔñÍâ²¿Ê±ÖÓ  HCLK/8
-//	fac_us=SystemCoreClock/8000000;	//ÎªÏµÍ³Ê±ÖÓµÄ1/8  
-//	fac_ms=(u16)fac_us*1000;//·ÇucosÏÂ,´ú±íÃ¿¸ömsÐèÒªµÄsystickÊ±ÖÓÊý   
+//	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);	//é€‰æ‹©å¤–éƒ¨æ—¶é’Ÿ  HCLK/8
+//	fac_us=SystemCoreClock/8000000;	//ä¸ºç³»ç»Ÿæ—¶é’Ÿçš„1/8  
+//	fac_ms=(u16)fac_us*1000;//éžucosä¸‹,ä»£è¡¨æ¯ä¸ªmséœ€è¦çš„systickæ—¶é’Ÿæ•°   
 //}
 //void delay_ms(unsigned int nms)
 //{
 //	u32 temp;
-//	SysTick->LOAD=(u32)nms*fac_ms;//Ê±¼ä¼ÓÔØ(SysTick->LOADÎª24bit)
-//	SysTick->VAL =0x00;           //Çå¿Õ¼ÆÊýÆ÷
-//	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;          //¿ªÊ¼µ¹Êý  
+//	SysTick->LOAD=(u32)nms*fac_ms;//æ—¶é—´åŠ è½½(SysTick->LOADä¸º24bit)
+//	SysTick->VAL =0x00;           //æ¸…ç©ºè®¡æ•°å™¨
+//	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;          //å¼€å§‹å€’æ•°  
 //	do
 //	{
 //		temp=SysTick->CTRL;
 //	}
-//	while(temp&0x01&&!(temp&(1<<16)));//µÈ´ýÊ±¼äµ½´ï
-//	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //¹Ø±Õ¼ÆÊýÆ÷
-//	SysTick->VAL =0X00;       //Çå¿Õ¼ÆÊýÆ÷
+//	while(temp&0x01&&!(temp&(1<<16)));//ç­‰å¾…æ—¶é—´åˆ°è¾¾
+//	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //å…³é—­è®¡æ•°å™¨
+//	SysTick->VAL =0X00;       //æ¸…ç©ºè®¡æ•°å™¨
 //}
 //void delay_us(unsigned long nus)
 //{		
 //	u32 temp;	    	 
-//	SysTick->LOAD=nus*fac_us; //Ê±¼ä¼ÓÔØ	  		 
-//	SysTick->VAL=0x00;        //Çå¿Õ¼ÆÊýÆ÷
-//	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;          //¿ªÊ¼µ¹Êý	 
+//	SysTick->LOAD=nus*fac_us; //æ—¶é—´åŠ è½½	  		 
+//	SysTick->VAL=0x00;        //æ¸…ç©ºè®¡æ•°å™¨
+//	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;          //å¼€å§‹å€’æ•°	 
 //	do
 //	{
 //		temp=SysTick->CTRL;
 //	}
-//	while(temp&0x01&&!(temp&(1<<16)));//µÈ´ýÊ±¼äµ½´ï   
-//	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //¹Ø±Õ¼ÆÊýÆ÷
-//	SysTick->VAL =0X00;       //Çå¿Õ¼ÆÊýÆ÷	 
+//	while(temp&0x01&&!(temp&(1<<16)));//ç­‰å¾…æ—¶é—´åˆ°è¾¾   
+//	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //å…³é—­è®¡æ•°å™¨
+//	SysTick->VAL =0X00;       //æ¸…ç©ºè®¡æ•°å™¨	 
 //}
 

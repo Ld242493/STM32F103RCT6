@@ -27,7 +27,7 @@ void ADC_DMA_Init(void)
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
   DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;     //Ñ­»·Ä£Ê½
+  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;     //å¾ªç¯æ¨¡å¼
   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
   DMA_Init(DMA1_Channel1, &DMA_InitStructure);
@@ -37,8 +37,8 @@ void ADC_DMA_Init(void)
 
   /* ADC1 configuration ------------------------------------------------------*/
   ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_InitStructure.ADC_ScanConvMode = ENABLE;        //¶àÍ¨µÀ¿ªÆôÉ¨ÃèÄ£Ê½
-  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;  //¿ªÆôÁ¬ĞøÄ£Ê½ÅäºÏdmaÑ­»·×ªÔË
+  ADC_InitStructure.ADC_ScanConvMode = ENABLE;        //å¤šé€šé“å¼€å¯æ‰«ææ¨¡å¼
+  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;  //å¼€å¯è¿ç»­æ¨¡å¼é…åˆdmaå¾ªç¯è½¬è¿
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
   ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
   ADC_InitStructure.ADC_NbrOfChannel = 3;
@@ -70,20 +70,20 @@ void ADC_DMA_Init(void)
 }
 
 /**
- * @brief »ñÈ¡ADC×ª»»Öµ
+ * @brief è·å–ADCè½¬æ¢å€¼
  * 
  * @return uint16_t 
  */
 void ADC_GetValue(void)
 {
   DMA_Cmd(DMA1_Channel1, DISABLE);
-  /*  DMAÉèÖÃ×ªÔËÊı¾İ¸öÊıĞèÒªÏÈ¹Ø±ÕDMAÍ¨µÀ  */
+  /*  DMAè®¾ç½®è½¬è¿æ•°æ®ä¸ªæ•°éœ€è¦å…ˆå…³é—­DMAé€šé“  */
   DMA_SetCurrDataCounter(DMA1_Channel1, 3);
-  /*  ADCµ¥´Î×ª»»ÅäºÏDMA·ÇÑ­»·Ä£Ê½(Õı³£Ä£Ê½)£¬ĞèÒªÃ¿´ÎÖØĞÂÊÖ¶¯¿ªÆô  */
+  /*  ADCå•æ¬¡è½¬æ¢é…åˆDMAéå¾ªç¯æ¨¡å¼(æ­£å¸¸æ¨¡å¼)ï¼Œéœ€è¦æ¯æ¬¡é‡æ–°æ‰‹åŠ¨å¼€å¯  */
   DMA_Cmd(DMA1_Channel1, ENABLE);
-  /* µ¥´Î×ª»»Ä£Ê½ĞèÒªÃ¿´ÎÊÖ¶¯ÖØĞÂ¿ªÆô×ª»» */ 
+  /* å•æ¬¡è½¬æ¢æ¨¡å¼éœ€è¦æ¯æ¬¡æ‰‹åŠ¨é‡æ–°å¼€å¯è½¬æ¢ */ 
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);  
-  /*  Ã¿´Î×ª»»ÅĞ¶Ï×ª»»Íê³É(EOC)±êÖ¾Î»  */
+  /*  æ¯æ¬¡è½¬æ¢åˆ¤æ–­è½¬æ¢å®Œæˆ(EOC)æ ‡å¿—ä½  */
   while(DMA_GetFlagStatus(DMA1_FLAG_TC1) == RESET);
   DMA_ClearFlag(DMA1_FLAG_TC1);
 }

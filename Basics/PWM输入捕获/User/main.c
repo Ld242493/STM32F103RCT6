@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    main.c 
-  * @brief   Í¨¹ıÊ¹ÓÃ¶¨Ê±Æ÷ÊäÈë²¶»ñÀ´²âÁ¿PWMÖÜÆÚ£¬ÆµÂÊ£¬Õ¼¿Õ±È
+  * @brief   é€šè¿‡ä½¿ç”¨å®šæ—¶å™¨è¾“å…¥æ•è·æ¥æµ‹é‡PWMå‘¨æœŸï¼Œé¢‘ç‡ï¼Œå ç©ºæ¯”
   *
   *
   *    
@@ -25,7 +25,7 @@ __IO uint32_t Period = 0;
  void TIM3_IRQHandler(void)
  { 
    static __IO uint16_t IC1Value, IC2Value;
-   //²¶»ñµ½ÉÏÉıÑØ½øÈëÒ»´ÎÖĞ¶Ï 
+   //æ•è·åˆ°ä¸Šå‡æ²¿è¿›å…¥ä¸€æ¬¡ä¸­æ–­ 
    if(TIM_GetITStatus(TIM3, TIM_IT_CC2) != RESET)
    {  
      /* Clear TIM3 Capture compare interrupt pending bit */
@@ -34,14 +34,14 @@ __IO uint32_t Period = 0;
      /* Get the Input Capture value */
      IC2Value = TIM_GetCapture2(TIM3) + 1;
 
-     /* Õ¼¿Õ±È = ¸ßµçÆ½¼ÆÊıÖµ/×ÜÖÜÆÚ¼ÆÊıÖµ X 100%  */
+     /* å ç©ºæ¯” = é«˜ç”µå¹³è®¡æ•°å€¼/æ€»å‘¨æœŸè®¡æ•°å€¼ X 100%  */
      DutyCycle =  IC1Value*100 / IC2Value;   
-     /* ²¶»ñµÄPWMÖÜÆÚ = ×ÜµÄ¼ÆÊıÖµ X µ¥¸ö¼ÆÊıËùĞèÒªµÄÊ±¼ä  */
-     Period = IC2Value; // 72/72 = 1Mhz = 1us£¬±íÊ¾¼ÆÒ»¸öÊıĞèÒªµÄÊ±¼ä
-     /* ÖÜÆÚus×ª»»Îªs¼ÆËãPWM²¶»ñÆµÂÊ */
+     /* æ•è·çš„PWMå‘¨æœŸ = æ€»çš„è®¡æ•°å€¼ X å•ä¸ªè®¡æ•°æ‰€éœ€è¦çš„æ—¶é—´  */
+     Period = IC2Value; // 72/72 = 1Mhz = 1usï¼Œè¡¨ç¤ºè®¡ä¸€ä¸ªæ•°éœ€è¦çš„æ—¶é—´
+     /* å‘¨æœŸusè½¬æ¢ä¸ºsè®¡ç®—PWMæ•è·é¢‘ç‡ */
      Frequency = 1000000/Period;      
    }
-   //²¶»ñµ½ÏÂ½µÑØ½øÈëÒ»´ÎÖĞ¶Ï
+   //æ•è·åˆ°ä¸‹é™æ²¿è¿›å…¥ä¸€æ¬¡ä¸­æ–­
    if(TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET)
    {  
      /* Clear TIM3 Capture compare interrupt pending bit */

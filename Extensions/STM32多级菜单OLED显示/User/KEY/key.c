@@ -21,7 +21,7 @@ void key_init(void)
 }
 
 /**
- * @brief  °´¼üÉ¨Ãè
+ * @brief  æŒ‰é”®æ‰«æ
  * @param  void
  * @retval void
  */

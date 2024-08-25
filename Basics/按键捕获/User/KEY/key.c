@@ -21,7 +21,7 @@ void key_init(void)
 }
 
 /**
- * @brief  °´¼üÉ¨Ãè
+ * @brief  æŒ‰é”®æ‰«æ
  * @param  void
  * @retval void
  */
@@ -102,7 +102,7 @@ void TIM6_IRQHandler(void)
    }
 }
 /**
- * @brief  WakeUp °´¼ü²¶»ñ
+ * @brief  WakeUp æŒ‰é”®æ•è·
  * @param  void
  * @retval void
  */

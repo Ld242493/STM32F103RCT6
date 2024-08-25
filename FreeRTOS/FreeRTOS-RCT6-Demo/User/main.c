@@ -16,8 +16,8 @@
 #include "KEY/key.h"
 #include "OLED/OLED.h"
 
-TaskHandle_t StartTask_t, Task1_t, Task2_t;   // ÈÎÎñ¾ä±ú
-char TaskInfoBuf[50];      //ÈÎÎñĞÅÏ¢»º´æ±äÁ¿
+TaskHandle_t StartTask_t, Task1_t, Task2_t;   // ä»»åŠ¡å¥æŸ„
+char TaskInfoBuf[50];      //ä»»åŠ¡ä¿¡æ¯ç¼“å­˜å˜é‡
 
 int main(void)
 {  
@@ -25,49 +25,49 @@ int main(void)
   USART1_Config();
   OLED_Init();
   OLED_ShowString(10, 0, "FreeRTOS Demo", OLED_8X16);
-  OLED_ShowChinese(0, 20, "ÄãºÃ£¬ÊÀ½ç¡£");
+  OLED_ShowChinese(0, 20, "ä½ å¥½ï¼Œä¸–ç•Œã€‚");
   OLED_Update();
-  //¿ÉÅäÖÃµÄÖĞ¶ÏÓÅÏÈ¼¶·¶Î§(0~15, MAX = 0, MIN = 15)
-  //FreeRTOS¿É¹ÜÀíµÄÖĞ¶Ï·¶Î§(5~15)
+  //å¯é…ç½®çš„ä¸­æ–­ä¼˜å…ˆçº§èŒƒå›´(0~15, MAX = 0, MIN = 15)
+  //FreeRTOSå¯ç®¡ç†çš„ä¸­æ–­èŒƒå›´(5~15)
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
   
-  xTaskCreate((TaskFunction_t )StartTask,       /* ÈÎÎñº¯Êı */
-              (const char*    )"StartTask",     /* ÈÎÎñÃû³Æ */
-              (uint16_t       )128,             /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-              (void*          )NULL,            /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
-              (UBaseType_t    )1,               /* ÈÎÎñÓÅÏÈ¼¶ */
-              (TaskHandle_t*  )&StartTask_t);   /* ÈÎÎñ¾ä±ú */  
+  xTaskCreate((TaskFunction_t )StartTask,       /* ä»»åŠ¡å‡½æ•° */
+              (const char*    )"StartTask",     /* ä»»åŠ¡åç§° */
+              (uint16_t       )128,             /* ä»»åŠ¡å †æ ˆå¤§å° */
+              (void*          )NULL,            /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
+              (UBaseType_t    )1,               /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+              (TaskHandle_t*  )&StartTask_t);   /* ä»»åŠ¡å¥æŸ„ */  
   vTaskStartScheduler();
 }
 
 void StartTask(void * pvParameters)
 {
-  taskENTER_CRITICAL();           /* ½øÈëÁÙ½çÇø(·ÀÖ¹´´½¨ÈÎÎñ±»´ò¶Ï£¬Í£Ö¹ÈÎÎñµ÷¶È) */
-  /* ´´½¨ÈÎÎñ1 */
-  xTaskCreate((TaskFunction_t )Task1,           /* ÈÎÎñº¯Êı */
-              (const char*    )"Task1",         /* ÈÎÎñÃû³Æ */
-              (uint16_t       )128,             /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-              (void*          )NULL,            /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
-              (UBaseType_t    )2,               /* ÈÎÎñÓÅÏÈ¼¶ */
-              (TaskHandle_t*  )&Task1_t);       /* ÈÎÎñ¾ä±ú */
+  taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•ŒåŒº(é˜²æ­¢åˆ›å»ºä»»åŠ¡è¢«æ‰“æ–­ï¼Œåœæ­¢ä»»åŠ¡è°ƒåº¦) */
+  /* åˆ›å»ºä»»åŠ¡1 */
+  xTaskCreate((TaskFunction_t )Task1,           /* ä»»åŠ¡å‡½æ•° */
+              (const char*    )"Task1",         /* ä»»åŠ¡åç§° */
+              (uint16_t       )128,             /* ä»»åŠ¡å †æ ˆå¤§å° */
+              (void*          )NULL,            /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
+              (UBaseType_t    )2,               /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+              (TaskHandle_t*  )&Task1_t);       /* ä»»åŠ¡å¥æŸ„ */
 
-  /* ´´½¨ÈÎÎñ2 */
-  xTaskCreate((TaskFunction_t )Task2,           /* ÈÎÎñº¯Êı */
-              (const char*    )"Task2",         /* ÈÎÎñÃû³Æ */
-              (uint16_t       )128,             /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
-              (void*          )NULL,            /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
-              (UBaseType_t    )3,               /* ÈÎÎñÓÅÏÈ¼¶ */
-              (TaskHandle_t*  )&Task2_t);       /* ÈÎÎñ¾ä±ú */  
+  /* åˆ›å»ºä»»åŠ¡2 */
+  xTaskCreate((TaskFunction_t )Task2,           /* ä»»åŠ¡å‡½æ•° */
+              (const char*    )"Task2",         /* ä»»åŠ¡åç§° */
+              (uint16_t       )128,             /* ä»»åŠ¡å †æ ˆå¤§å° */
+              (void*          )NULL,            /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
+              (UBaseType_t    )3,               /* ä»»åŠ¡ä¼˜å…ˆçº§ */
+              (TaskHandle_t*  )&Task2_t);       /* ä»»åŠ¡å¥æŸ„ */  
   
-  vTaskDelete(StartTask_t);       /* É¾³ı¿ªÊ¼ÈÎÎñ */
-  taskEXIT_CRITICAL();            /* ÍË³öÁÙ½çÇø(ÈÎÎñ¿ªÊ¼µ÷¶È) */    
+  vTaskDelete(StartTask_t);       /* åˆ é™¤å¼€å§‹ä»»åŠ¡ */
+  taskEXIT_CRITICAL();            /* é€€å‡ºä¸´ç•ŒåŒº(ä»»åŠ¡å¼€å§‹è°ƒåº¦) */    
 }
 
 void Task1(void *pvParameters)
 {
   led_init();
   vTaskList(TaskInfoBuf);
-  printf("\r\nÈÎÎñÃû\t\t ×´Ì¬\t ÓÅÏÈ¼¶\t Ê£ÓàÕ»\t ÈÎÎñĞòºÅ\r\n");
+  printf("\r\nä»»åŠ¡å\t\t çŠ¶æ€\t ä¼˜å…ˆçº§\t å‰©ä½™æ ˆ\t ä»»åŠ¡åºå·\r\n");
   printf("%s\r\n", TaskInfoBuf);  
   while(1)
   {

@@ -26,17 +26,17 @@ uint8_t ReadBuffer[20];
 void FatFs_WriteTest(void)
 {
   res = f_mount(&fs, "1:", 1);
-  if(res == FR_NO_FILESYSTEM)   //Ã»ÓĞÎÄ¼şÏµÍ³£¬¸ñÊ½»¯
+  if(res == FR_NO_FILESYSTEM)   //æ²¡æœ‰æ–‡ä»¶ç³»ç»Ÿï¼Œæ ¼å¼åŒ–
   {
     res = f_mkfs("1:", 1, 0);
     if(FR_OK == res)
     {
-      f_mount(NULL, "1:", 1);   //È¡Ïû¹ÒÔØ
-      f_mount(&fs, "1:", 1);    //ÖØĞÂ¹ÒÔØ
+      f_mount(NULL, "1:", 1);   //å–æ¶ˆæŒ‚è½½
+      f_mount(&fs, "1:", 1);    //é‡æ–°æŒ‚è½½
     }
     else  led_ctrl(led_on);
   }
-  /*  Ğ´Êı¾İ  */
+  /*  å†™æ•°æ®  */
   if(FR_OK == f_open(&fnew, "1:FatFs.txt", FA_OPEN_ALWAYS | FA_WRITE))
   {
     f_write(&fnew, WriteBuffer, 20, &fnum);
@@ -45,14 +45,14 @@ void FatFs_WriteTest(void)
     f_close(&fnew);
   }
   else  led_ctrl(led_on);
-    /*  È¡Ïû¹ÒÔØ  */
+    /*  å–æ¶ˆæŒ‚è½½  */
   f_mount(NULL, "1:", 1);
 }
 
 void FatFs_ReadTest(void)
 {
   res = f_mount(&fs, "1:", 1);
-  /*  ¶ÁÊı¾İ  */
+  /*  è¯»æ•°æ®  */
   if(FR_OK == f_open(&fnew, "1:FatFs.txt", FA_OPEN_EXISTING | FA_READ))
   {
     f_read(&fnew, ReadBuffer, 20, &fnum);

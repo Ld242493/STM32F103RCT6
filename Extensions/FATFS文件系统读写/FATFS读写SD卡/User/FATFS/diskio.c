@@ -12,15 +12,15 @@
 #include "../SD_CARD/sd_card.h"
 
 
-/* ÎªÃ¿¸öÉè±¸¶¨ÒåÒ»¸öÎïÀí±àºÅ */
-#define ATA			    0     // Ô¤ÁôSD¿¨Ê¹ÓÃ
-#define SPI_FLASH		1     // Íâ²¿SPI Flash
+/* ä¸ºæ¯ä¸ªè®¾å¤‡å®šä¹‰ä¸€ä¸ªç‰©ç†ç¼–å· */
+#define ATA			    0     // é¢„ç•™SDå¡ä½¿ç”¨
+#define SPI_FLASH		1     // å¤–éƒ¨SPI Flash
 
 /*-----------------------------------------------------------------------*/
-/* »ñÈ¡Éè±¸×´Ì¬                                                          */
+/* è·å–è®¾å¤‡çŠ¶æ€                                                          */
 /*-----------------------------------------------------------------------*/
 DSTATUS disk_status (
-	BYTE pdrv		/* ÎïÀí±àºÅ */
+	BYTE pdrv		/* ç‰©ç†ç¼–å· */
 )
 {
 	DSTATUS status = STA_NOINIT;
@@ -37,10 +37,10 @@ DSTATUS disk_status (
 }
 
 /*-----------------------------------------------------------------------*/
-/* Éè±¸³õÊ¼»¯                                                            */
+/* è®¾å¤‡åˆå§‹åŒ–                                                            */
 /*-----------------------------------------------------------------------*/
 DSTATUS disk_initialize (
-	BYTE pdrv				/* ÎïÀí±àºÅ */
+	BYTE pdrv				/* ç‰©ç†ç¼–å· */
 )
 {
 	DSTATUS status = STA_NOINIT;	
@@ -58,26 +58,26 @@ DSTATUS disk_initialize (
 
 
 /*-----------------------------------------------------------------------*/
-/* ¶ÁÉÈÇø£º¶ÁÈ¡ÉÈÇøÄÚÈİµ½Ö¸¶¨´æ´¢Çø                                              */
+/* è¯»æ‰‡åŒºï¼šè¯»å–æ‰‡åŒºå†…å®¹åˆ°æŒ‡å®šå­˜å‚¨åŒº                                              */
 /*-----------------------------------------------------------------------*/
 DRESULT disk_read (
-	BYTE pdrv,		/* Éè±¸ÎïÀí±àºÅ(0..) */
-	BYTE *buff,		/* Êı¾İ»º´æÇø */
-	DWORD sector,	/* ÉÈÇøÊ×µØÖ· */
-	UINT count		/* ÉÈÇø¸öÊı(1..128) */
+	BYTE pdrv,		/* è®¾å¤‡ç‰©ç†ç¼–å·(0..) */
+	BYTE *buff,		/* æ•°æ®ç¼“å­˜åŒº */
+	DWORD sector,	/* æ‰‡åŒºé¦–åœ°å€ */
+	UINT count		/* æ‰‡åŒºä¸ªæ•°(1..128) */
 )
 {
   uint8_t res;
 	DRESULT status = RES_PARERR;
 
-  if (!count) return status;      /* count²»ÄÜµÈÓÚ0£¬·ñÔò·µ»Ø²ÎÊı´íÎó */
+  if (!count) return status;      /* countä¸èƒ½ç­‰äº0ï¼Œå¦åˆ™è¿”å›å‚æ•°é”™è¯¯ */
 
 	switch (pdrv) {
 		case ATA:	/* SD CARD */
       res = sd_read_disk(buff, sector, count);
-      while (res)     /* ¶Á³ö´í */
+      while (res)     /* è¯»å‡ºé”™ */
       {
-          if (res != 2)sd_init(); /* ÖØĞÂ³õÊ¼»¯SD¿¨ */
+          if (res != 2)sd_init(); /* é‡æ–°åˆå§‹åŒ–SDå¡ */
           res = sd_read_disk(buff, sector, count);
       }
       status = RES_OK;
@@ -94,28 +94,28 @@ DRESULT disk_read (
 }
 
 /*-----------------------------------------------------------------------*/
-/* Ğ´ÉÈÇø£º¼ûÊı¾İĞ´ÈëÖ¸¶¨ÉÈÇø¿Õ¼äÉÏ                                      */
+/* å†™æ‰‡åŒºï¼šè§æ•°æ®å†™å…¥æŒ‡å®šæ‰‡åŒºç©ºé—´ä¸Š                                      */
 /*-----------------------------------------------------------------------*/
 #if _USE_WRITE
 
 DRESULT disk_write (
-	BYTE pdrv,			  /* Éè±¸ÎïÀí±àºÅ(0..) */
-	const BYTE *buff,	/* ÓûĞ´ÈëÊı¾İµÄ»º´æÇø */
-	DWORD sector,		  /* ÉÈÇøÊ×µØÖ· */
-	UINT count			  /* ÉÈÇø¸öÊı(1..128) */
+	BYTE pdrv,			  /* è®¾å¤‡ç‰©ç†ç¼–å·(0..) */
+	const BYTE *buff,	/* æ¬²å†™å…¥æ•°æ®çš„ç¼“å­˜åŒº */
+	DWORD sector,		  /* æ‰‡åŒºé¦–åœ°å€ */
+	UINT count			  /* æ‰‡åŒºä¸ªæ•°(1..128) */
 )
 {
   uint8_t res;
 	DRESULT status = RES_PARERR;
 
-  if (!count) return status;      /* count²»ÄÜµÈÓÚ0£¬·ñÔò·µ»Ø²ÎÊı´íÎó */
+  if (!count) return status;      /* countä¸èƒ½ç­‰äº0ï¼Œå¦åˆ™è¿”å›å‚æ•°é”™è¯¯ */
 
 	switch (pdrv) {
 		case ATA:	/* SD CARD */    
       res = sd_write_disk((uint8_t *)buff, sector, count);
-      while (res)     /* Ğ´³ö´í */
+      while (res)     /* å†™å‡ºé”™ */
       {
-          sd_init();  /* ÖØĞÂ³õÊ¼»¯SD¿¨ */
+          sd_init();  /* é‡æ–°åˆå§‹åŒ–SDå¡ */
           res = sd_write_disk((uint8_t *)buff, sector, count);
           //printf("sd wr error:%d\r\n", res);
       }
@@ -135,14 +135,14 @@ DRESULT disk_write (
 
 
 /*-----------------------------------------------------------------------*/
-/* ÆäËû¿ØÖÆ                                                              */
+/* å…¶ä»–æ§åˆ¶                                                              */
 /*-----------------------------------------------------------------------*/
 
 #if _USE_IOCTL
 DRESULT disk_ioctl (
-	BYTE pdrv,		/* ÎïÀí±àºÅ */
-	BYTE cmd,		  /* ¿ØÖÆÖ¸Áî */
-	void *buff		/* Ğ´Èë»òÕß¶ÁÈ¡Êı¾İµØÖ·Ö¸Õë */
+	BYTE pdrv,		/* ç‰©ç†ç¼–å· */
+	BYTE cmd,		  /* æ§åˆ¶æŒ‡ä»¤ */
+	void *buff		/* å†™å…¥æˆ–è€…è¯»å–æ•°æ®åœ°å€æŒ‡é’ˆ */
 )
 {
 	DRESULT status = RES_PARERR;
@@ -187,7 +187,7 @@ DRESULT disk_ioctl (
 #endif
 
 DWORD get_fattime(void) {
-/* ·µ»Øµ±Ç°Ê±¼ä´Á */
+/* è¿”å›å½“å‰æ—¶é—´æˆ³ */
 return	  ((DWORD)(2015 - 1980) << 25)	/* Year 2015 */
     | ((DWORD)1 << 21)				/* Month 1 */
     | ((DWORD)1 << 16)				/* Mday 1 */
