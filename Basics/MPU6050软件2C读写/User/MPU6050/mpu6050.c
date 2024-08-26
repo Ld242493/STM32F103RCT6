@@ -2,7 +2,7 @@
 
 /* IIC Config -------------------------------------------------------------*/
 
-static void IIC_GPIO_Init(void)
+void IIC_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
@@ -108,29 +108,41 @@ static uint8_t IIC_ReceiveAck(void)
 
 /* MPU6050 Config -------------------------------------------------------------*/
 
-void MPU6050_WriteReg(uint8_t RegAddress, uint8_t data)
+/**
+ * @brief 寄存器写一个字节数据
+ *        先发送从机地址，然后发送寄存器地址，最后发送一个字节数据
+ * @param RegAddr 寄存器地址
+ * @param data 字节数据
+ */
+void MPU6050_WriteReg(uint8_t RegAddr, uint8_t data)
 {
   IIC_Start();
-  IIC_SendByte(MPU6050_ADDRESS);
-  IIC_ReceiveAck();
-  IIC_SendByte(RegAddress);
+  IIC_SendByte((MPU6050_ADDRESS << 1) | 0);  //最低位为0，默认写数据
+  IIC_ReceiveAck();   //应答位不做处理
+  IIC_SendByte(RegAddr);
   IIC_ReceiveAck();
   IIC_SendByte(data);
   IIC_ReceiveAck();
   IIC_Stop();
 }
 
-uint8_t MPU6050_ReadReg(uint8_t RegAddress)
+/**
+ * @brief 读取寄存器一个字节数据
+ *        先发送从机地址，然后发送寄存器地址，重新发送从机地址，最后读取一个字节数据
+ * @param RegAddr 寄存器地址
+ * @return uint8_t 
+ */
+uint8_t MPU6050_ReadReg(uint8_t RegAddr)
 {
   uint8_t data;
   IIC_Start();
-  IIC_SendByte(MPU6050_ADDRESS);
-  IIC_ReceiveAck();
-  IIC_SendByte(RegAddress);
+  IIC_SendByte((MPU6050_ADDRESS << 1) | 0);  //最低位为0，默认写数据
+  IIC_ReceiveAck();   //应答位不做处理
+  IIC_SendByte(RegAddr);
   IIC_ReceiveAck();
 
   IIC_Start();
-  IIC_SendByte(MPU6050_ADDRESS | 0x01);
+  IIC_SendByte((MPU6050_ADDRESS << 1) | 1); //最低位为1，设置读数据
   IIC_ReceiveAck();
   data = IIC_ReceiveByte();
   IIC_SendAck(1);
@@ -139,14 +151,73 @@ uint8_t MPU6050_ReadReg(uint8_t RegAddress)
   return data;
 }
 
+/**
+ * @brief 寄存器连续写多个字节数据
+ *        先发送从机地址，然后发送寄存器地址，最后连续发送多个字节数据
+ * @param MPUAddr MPU6050从机地址
+ * @param RegAddr 寄存器地址
+ * @param len 数据长度
+ * @param data 字节数据
+ */
+uint8_t MPU6050_WriteData(uint8_t MPUAddr, uint8_t RegAddr, uint8_t len, uint8_t *data)
+{
+  IIC_Start();
+  IIC_SendByte((MPUAddr << 1) | 0);  //最低位为0，默认写数据
+  IIC_ReceiveAck();   //应答位不做处理
+  IIC_SendByte(RegAddr);
+  IIC_ReceiveAck();
+  for (uint8_t i = 0; i < len; i++)
+  {
+    IIC_SendByte(data[i]);
+    IIC_ReceiveAck();    
+  }
+  IIC_Stop();
+  return 0;
+}
+
+/**
+ * @brief 读取寄存器多个个字节数据
+ *        先发送从机地址，然后发送寄存器地址，重新发送从机地址，最后连续读取多个字节数据  
+ * @param RegAddr 寄存器地址
+ * @return uint8_t 
+ */
+uint8_t MPU6050_ReadData(uint8_t MPUAddr, uint8_t RegAddr, uint8_t len, uint8_t *data)
+{
+  IIC_Start();
+  IIC_SendByte((MPUAddr << 1) | 0);  //最低位为0，默认写数据
+  IIC_ReceiveAck();   //应答位不做处理
+  IIC_SendByte(RegAddr);
+  IIC_ReceiveAck();
+
+  IIC_Start();
+  IIC_SendByte((MPUAddr << 1) | 1); //最低位为1，设置读数据
+  IIC_ReceiveAck();
+  for (uint8_t i = len; i > 0; i--)
+  {
+    *data = IIC_ReceiveByte();
+    if(i == 1)  IIC_SendAck(1); //最后一个字节发送非应答信号
+    else        IIC_SendAck(0);
+    data++;
+  }
+  IIC_Stop();
+  return 0;
+}
+
 void MPU6050_Init(void)
 {
   IIC_GPIO_Init();
 	
-  /*  电源管理寄存器1，取消睡眠模式，选择时钟源为X轴陀螺仪  */
-	MPU6050_WriteReg(MPU6050_PWR_MGMT_1, 0x01);
-  /*  电源管理寄存器2，保持默认值0，所有轴均不待机  */
-	MPU6050_WriteReg(MPU6050_PWR_MGMT_2, 0x00);
+  /*  电源管理寄存器1，复位  */
+	MPU6050_WriteReg(MPU6050_PWR_MGMT_1, 0x80);
+  delay_ms(100);
+  if(MPU6050_ADDRESS == MPU6050_GetID())
+  {
+    /*  电源管理寄存器1，取消睡眠模式，选择时钟源为X轴陀螺仪  */
+    MPU6050_WriteReg(MPU6050_PWR_MGMT_1, 0x01);
+    /*  电源管理寄存器2，保持默认值0，所有轴均不待机  */
+    MPU6050_WriteReg(MPU6050_PWR_MGMT_2, 0x00);    
+  }
+  else return;
   /*  采样率分频寄存器，配置采样率  */
 	MPU6050_WriteReg(MPU6050_SMPLRT_DIV, 0x09);
   /*  配置寄存器，配置DLPF  */
@@ -155,41 +226,62 @@ void MPU6050_Init(void)
 	MPU6050_WriteReg(MPU6050_GYRO_CONFIG, 0x18);
   /*  加速度计配置寄存器，选择满量程为±16g  */
 	MPU6050_WriteReg(MPU6050_ACCEL_CONFIG, 0x18);	
+  /*  INT引脚低电平有效  */
+	MPU6050_WriteReg(MPU6050_INTBP_CONFIG, 0x80);	  
 }
 
+/**
+ * @brief 读取MPU6050从机地址
+ * 
+ * @return uint8_t 
+ */
 uint8_t MPU6050_GetID(void)
 {
   return MPU6050_ReadReg(MPU6050_WHO_AM_I);
 }
 
+/**
+ * @brief 获取加速度值
+ * 
+ * @param accx 
+ * @param accy 
+ * @param accz 
+ */
 void MPU6050_GetAccel(int16_t *accx, int16_t *accy, int16_t *accz)
 {
-  uint8_t dataH, dataL;
-  dataH = MPU6050_ReadReg(MPU6050_ACCEL_XOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_ACCEL_XOUT_L);
-  *accx = (dataH << 8) | dataL;
-
-  dataH = MPU6050_ReadReg(MPU6050_ACCEL_YOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_ACCEL_YOUT_L);
-  *accy = (dataH << 8) | dataL;
-
-  dataH = MPU6050_ReadReg(MPU6050_ACCEL_ZOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_ACCEL_ZOUT_L);
-  *accz = (dataH << 8) | dataL;
+  uint8_t data[6];
+  MPU6050_ReadData(MPU6050_ADDRESS, MPU6050_ACCEL_XOUT_H, 6, data);
+  *accx = (data[0] << 8) | data[1];
+  *accy = (data[2] << 8) | data[3];
+  *accz = (data[4] << 8) | data[5];
 }
 
+/**
+ * @brief 获取陀螺仪值
+ * 
+ * @param gyrox 
+ * @param gyroy 
+ * @param gyroz 
+ */
 void MPU6050_GetGyro(int16_t *gyrox, int16_t *gyroy, int16_t *gyroz)
 {
-  uint8_t dataH, dataL;
-  dataH = MPU6050_ReadReg(MPU6050_GYRO_XOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_GYRO_XOUT_L);
-  *gyrox = (dataH << 8) | dataL;
+  uint8_t data[6];
+  MPU6050_ReadData(MPU6050_ADDRESS, MPU6050_GYRO_XOUT_H, 6, data);
+  *gyrox = (data[0] << 8) | data[1];
+  *gyroy = (data[2] << 8) | data[3];
+  *gyroz = (data[4] << 8) | data[5];
+}
 
-  dataH = MPU6050_ReadReg(MPU6050_GYRO_YOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_GYRO_YOUT_L);
-  *gyroy = (dataH << 8) | dataL;
-
-  dataH = MPU6050_ReadReg(MPU6050_GYRO_ZOUT_H);
-  dataL = MPU6050_ReadReg(MPU6050_GYRO_ZOUT_L);
-  *gyroz = (dataH << 8) | dataL;
+/**
+ * @brief 获取温度值
+ * 
+ * @return int16_t 
+ */
+float MPU605_GetTemp(void)
+{
+  uint8_t data[2];
+  int16_t raw;
+  MPU6050_ReadData(MPU6050_ADDRESS, MPU6050_TEMP_OUT_H, 2, data);
+  raw = (data[0] << 8) | data[1];
+  return (36.53 + (double)raw / 340);
 }
