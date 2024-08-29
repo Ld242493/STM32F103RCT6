@@ -14,7 +14,6 @@
 #include "LED/led.h"
 #include "KEY/key.h"
 #include "OLED/OLED.h"
-#include "math.h"
 #include "arm_math.h"
 
 float data;
