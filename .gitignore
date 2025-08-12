@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+objects/
 
 # Linker output
 *.ilk
@@ -35,6 +36,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.axf
 
 # Debug files
 *.dSYM/
@@ -53,3 +55,11 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# other files
+*.33161
+Basics/**LCD/
+正点原子参考资料/
+FreeRTOS/FreeRTOSv202212.01/
+FreeRTOS/FreeRTOS参考资料/
+LVGL/
