@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "key.h": "c",
+    "main.h": "c",
+    "adc.h": "c",
+    "stm32f10x.h": "c"
+  }
+}

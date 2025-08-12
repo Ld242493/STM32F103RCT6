@@ -1,0 +1,9 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "editor.tabSize": 2,
+
+    "files.associations": {
+      "key.h": "c",
+      "main.h": "c"
+    },
+}
